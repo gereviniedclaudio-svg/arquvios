@@ -36,18 +36,15 @@ if (!$config || (!isset($config['active_gateway']) && !isset($config['gateway'])
 }
 
 // Determina qual gateway está ativo (suporta ambas as chaves)
-$ACTIVE_GATEWAY = $config['active_gateway'] ?? $config['gateway'] ?? 'axyra';
+$ACTIVE_GATEWAY = $config['active_gateway'] ?? $config['gateway'] ?? 'bravopay';
 
 // Mapeia o gateway para o arquivo PHP correto
 $GATEWAY_FILES = [
-    'medusa' => 'pagamento-medusa.php',
-    'axyra' => 'pagamento-axyra.php',
-    'trust7' => 'pagamento-trust7.php',
-    'blackcat' => 'pagamento-blackcat.php'
+    'bravopay' => 'pagamento-bravopay.php'
 ];
 
-// Define o arquivo do gateway ativo (fallback: axyra)
-$PAYMENT_FILE = $GATEWAY_FILES[$ACTIVE_GATEWAY] ?? $GATEWAY_FILES['axyra'];
+// Define o arquivo do gateway ativo (fallback: bravopay)
+$PAYMENT_FILE = $GATEWAY_FILES[$ACTIVE_GATEWAY] ?? $GATEWAY_FILES['bravopay'];
 
 // Log da configuração
 error_log("[Config] ✅ Gateway ativo: " . strtoupper($ACTIVE_GATEWAY));

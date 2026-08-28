@@ -6,9 +6,16 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
-// ========== CONFIGURAÇÃO BLACKCAT ==========
-$BLACKCAT_API_URL = 'https://api.blackcatoficial.com/api';
-$BLACKCAT_API_KEY = 'sk_live_c791220ca12eff50c57fd2f4621faac5695a3558391853509e68d4fc7db3b8f8';
+// ========== CONFIGURAÇÃO BRAVOPAY ==========
+$BRAVOPAY_API_URL = 'https://bravopay.club/api/v1';
+// Chave lida da variável de ambiente "api" (Bearer bp_live_...)
+$BRAVOPAY_API_KEY = getenv('api') ?: ($_ENV['api'] ?? ($_SERVER['api'] ?? ''));
+
+if (empty($BRAVOPAY_API_KEY)) {
+    error_log("[BravoPay] ❌ Variável de ambiente 'api' não configurada");
+    echo json_encode(['success' => false, 'message' => 'Gateway não configurado. Contate o suporte.']);
+    exit;
+}
 
 // Função para gerar CPF válido (fallback)
 function gerarCPF() {
@@ -74,6 +81,8 @@ try {
 
     $valor_centavos = isset($req['valor']) ? intval($req['valor']) : 0;
     if (!$valor_centavos || $valor_centavos <= 0) throw new Exception('Valor inválido');
+    // BravoPay exige mínimo de R$ 5,00 (500 centavos)
+    if ($valor_centavos < 500) $valor_centavos = 500;
 
     $nome_cliente = !empty($req['nome']) ? trim($req['nome']) : null;
     $email        = !empty($req['email']) ? trim($req['email']) : null;
@@ -111,48 +120,36 @@ try {
     $local_order_id = uniqid('order_');
     $product_title = $req['product_title'] ?? 'Inscrição SES TO 2026';
 
-    $serverUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://" . $_SERVER['HTTP_HOST'];
-    $webhookUrl = $serverUrl . dirname($_SERVER['SCRIPT_NAME']) . '/webhook-blackcat.php';
-
-    // Payload Blackcat
+    // Payload BravoPay
     $payload = [
-        'amount' => $valor_centavos,
-        'currency' => 'BRL',
-        'paymentMethod' => 'pix',
-        'items' => [
-            [
-                'title' => $product_title,
-                'quantity' => 1,
-                'unitPrice' => $valor_centavos,
-                'tangible' => false
-            ]
-        ],
-        'customer' => [
-            'name' => $nome_cliente,
+        'amount_cents'       => $valor_centavos,
+        'method'             => 'pix',
+        'customer'           => [
+            'name'  => $nome_cliente,
             'email' => $email,
-            'phone' => $telefone,
-            'document' => [
-                'number' => $cpf,
-                'type' => strlen($cpf) === 14 ? 'cnpj' : 'cpf'
-            ]
+            'cpf'   => $cpf,
+            'phone' => $telefone
         ],
-        'pix' => [
-            'expiresInDays' => 1
-        ],
-        'postbackUrl' => $webhookUrl,
-        'externalRef' => $local_order_id
+        'description'        => $product_title,
+        'external_reference' => $local_order_id,
+        'expires_in'         => 3600
     ];
 
-    // Incluir UTMs se existirem
-    foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as $utm) {
-        if (isset($utmParams[$utm])) {
-            $payload[$utm] = $utmParams[$utm];
-        }
-    }
+    // UTMs para rastreamento/UTMify (obrigatório enviar na API)
+    $utm = [];
+    if (isset($utmParams['utm_source']))   $utm['source']   = $utmParams['utm_source'];
+    if (isset($utmParams['utm_medium']))   $utm['medium']   = $utmParams['utm_medium'];
+    if (isset($utmParams['utm_campaign'])) $utm['campaign'] = $utmParams['utm_campaign'];
+    if (isset($utmParams['utm_content']))  $utm['content']  = $utmParams['utm_content'];
+    if (isset($utmParams['utm_term']))     $utm['term']     = $utmParams['utm_term'];
+    if (isset($utmParams['fbclid']))       $utm['fbclid']   = $utmParams['fbclid'];
+    if (isset($utmParams['gclid']))        $utm['gclid']    = $utmParams['gclid'];
+    if (isset($utmParams['ttclid']))       $utm['ttclid']   = $utmParams['ttclid'];
+    if (!empty($utm)) $payload['utm'] = $utm;
 
-    error_log("[Blackcat] 📦 Criando pagamento PIX: " . json_encode($payload, JSON_UNESCAPED_UNICODE));
+    error_log("[BravoPay] 📦 Criando pagamento PIX: " . json_encode($payload, JSON_UNESCAPED_UNICODE));
 
-    $ch = curl_init($BLACKCAT_API_URL . '/sales/create-sale');
+    $ch = curl_init($BRAVOPAY_API_URL . '/transactions');
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST           => true,
@@ -160,7 +157,9 @@ try {
         CURLOPT_TIMEOUT        => 40,
         CURLOPT_HTTPHEADER     => [
             'Content-Type: application/json',
-            'X-API-Key: ' . $BLACKCAT_API_KEY
+            'Accept: application/json',
+            'Authorization: Bearer ' . $BRAVOPAY_API_KEY,
+            'Idempotency-Key: ' . $local_order_id
         ]
     ]);
 
@@ -169,23 +168,23 @@ try {
     $curlError = curl_error($ch);
     curl_close($ch);
 
-    if ($response === false) throw new Exception('Falha ao contatar Blackcat API: ' . $curlError);
+    if ($response === false) throw new Exception('Falha ao contatar BravoPay API: ' . $curlError);
 
-    error_log("[Blackcat] 📊 HTTP $httpCode - Resposta: " . $response);
+    error_log("[BravoPay] 📊 HTTP $httpCode - Resposta: " . $response);
 
     $result = json_decode($response, true);
-    
-    if ($httpCode < 200 || $httpCode >= 300 || empty($result['success'])) {
-        $msg = $result['message'] ?? $result['error'] ?? $response;
-        throw new Exception("Erro na API Blackcat (HTTP $httpCode): " . $msg);
+
+    if ($httpCode < 200 || $httpCode >= 300 || empty($result['id'])) {
+        $msg = $result['error']['message'] ?? ($result['message'] ?? $response);
+        throw new Exception("Erro na API BravoPay (HTTP $httpCode): " . $msg);
     }
 
-    $payment_id = $result['data']['transactionId'] ?? null;
-    $pixCode = $result['data']['paymentData']['qrCode'] ?? $result['data']['paymentData']['copyPaste'] ?? null;
-    $qrCodeUrl = $result['data']['paymentData']['qrCodeBase64'] ?? ('https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($pixCode) . '&size=300x300');
+    $payment_id = $result['id'] ?? null;
+    $pixCode    = $result['pix']['copy_paste'] ?? null;
+    $qrCodeUrl  = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($pixCode) . '&size=300x300';
 
     if (!$payment_id || !$pixCode) {
-        throw new Exception('PIX não foi gerado pela Blackcat.');
+        throw new Exception('PIX não foi gerado pela BravoPay.');
     }
 
     // Persistência Local
@@ -209,7 +208,7 @@ try {
     // Notifica UTMIFY pendente
     $utmifyData = [
         'orderId' => (string) $payment_id,
-        'platform' => 'Blackcat',
+        'platform' => 'BravoPay',
         'paymentMethod' => 'pix',
         'status' => 'waiting_payment',
         'createdAt' => gmdate('Y-m-d H:i:s'),
@@ -224,6 +223,7 @@ try {
         'isTest' => false
     ];
 
+    $serverUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://" . $_SERVER['HTTP_HOST'];
     $utmifyUrl = $serverUrl . dirname($_SERVER['SCRIPT_NAME']) . '/utmify-pendente.php';
     $ch = curl_init($utmifyUrl);
     curl_setopt_array($ch, [
@@ -244,6 +244,6 @@ try {
     ]);
 
 } catch (Exception $e) {
-    error_log("[Blackcat] ❌ Erro: " . $e->getMessage());
+    error_log("[BravoPay] ❌ Erro: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Erro ao gerar o PIX: ' . $e->getMessage()]);
 }
