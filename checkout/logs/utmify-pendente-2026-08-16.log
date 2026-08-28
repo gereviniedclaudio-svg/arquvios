@@ -1,0 +1,118 @@
+[2026-08-16 01:31:35] 📥 Dados recebidos
+Dados: {
+    "raw": "{\"orderId\":\"bee77e1b-da89-428c-ac0c-71861c0780ac\",\"platform\":\"AxyraPay\",\"paymentMethod\":\"pix\",\"status\":\"waiting_payment\",\"createdAt\":\"2026-08-16 01:31:20\",\"approvedDate\":null,\"refundedAt\":null,\"customer\":{\"name\":\"Mayara Elisa da Silva\",\"email\":\"drop897@gmail.com\",\"phone\":\"32689456468\",\"document\":\"17917035778\",\"country\":\"BR\",\"ip\":\"::1\",\"userAgent\":\"Mozilla\\\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\\\/537.36 (KHTML, like Gecko) Chrome\\\/151.0.0.0 Safari\\\/537.36 Edg\\\/151.0.0.0\",\"externalId\":\"bee77e1b-da89-428c-ac0c-71861c0780ac\",\"fbp\":null,\"fbc\":null},\"products\":[{\"id\":\"PROD_6a8112e8089d3\",\"name\":\"ebook estudos\",\"planId\":null,\"planName\":null,\"quantity\":1,\"priceInCents\":10001}],\"trackingParameters\":{\"utm_source\":\"organic\"},\"commission\":{\"totalPriceInCents\":10001,\"gatewayFeeInCents\":0,\"userCommissionInCents\":10001},\"isTest\":false}"
+}
+----------------------------------------
+[2026-08-16 01:31:35] 🔄 Processando dados recebidos
+Dados: {
+    "orderId": "bee77e1b-da89-428c-ac0c-71861c0780ac",
+    "platform": "AxyraPay",
+    "paymentMethod": "pix",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-16 01:31:20",
+    "approvedDate": null,
+    "refundedAt": null,
+    "customer": {
+        "name": "Mayara Elisa da Silva",
+        "email": "drop897@gmail.com",
+        "phone": "32689456468",
+        "document": "17917035778",
+        "country": "BR",
+        "ip": "::1",
+        "userAgent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/151.0.0.0 Safari\/537.36 Edg\/151.0.0.0",
+        "externalId": "bee77e1b-da89-428c-ac0c-71861c0780ac",
+        "fbp": null,
+        "fbc": null
+    },
+    "products": [
+        {
+            "id": "PROD_6a8112e8089d3",
+            "name": "ebook estudos",
+            "planId": null,
+            "planName": null,
+            "quantity": 1,
+            "priceInCents": 10001
+        }
+    ],
+    "trackingParameters": {
+        "utm_source": "organic"
+    },
+    "commission": {
+        "totalPriceInCents": 10001,
+        "gatewayFeeInCents": 0,
+        "userCommissionInCents": 10001
+    },
+    "isTest": false
+}
+----------------------------------------
+[2026-08-16 01:31:35] 📤 Dados formatados para Utmify
+Dados: {
+    "orderId": "bee77e1b-da89-428c-ac0c-71861c0780ac",
+    "platform": "AxyraPay",
+    "paymentMethod": "pix",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-16 01:31:20",
+    "approvedDate": null,
+    "refundedAt": null,
+    "customer": {
+        "name": "Mayara Elisa da Silva",
+        "email": "drop897@gmail.com",
+        "phone": "32689456468",
+        "document": "17917035778",
+        "country": "BR",
+        "ip": "::1",
+        "userAgent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/151.0.0.0 Safari\/537.36 Edg\/151.0.0.0",
+        "externalId": "bee77e1b-da89-428c-ac0c-71861c0780ac",
+        "fbp": null,
+        "fbc": null
+    },
+    "products": [
+        {
+            "id": "PROD_6a8112e8089d3",
+            "name": "ebook estudos",
+            "planId": null,
+            "planName": null,
+            "quantity": 1,
+            "priceInCents": 10001
+        }
+    ],
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "organic",
+        "utm_campaign": null,
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null,
+        "xcod": null,
+        "fbclid": null,
+        "gclid": null,
+        "ttclid": null
+    },
+    "commission": {
+        "totalPriceInCents": 10001,
+        "gatewayFeeInCents": 0,
+        "userCommissionInCents": 10001
+    },
+    "isTest": false
+}
+----------------------------------------
+[2026-08-16 01:31:35] 📡 Enviando requisição para Utmify
+Dados: {
+    "url": "https:\/\/api.utmify.com.br\/api-credentials\/orders",
+    "headers": [
+        "Content-Type: application\/json",
+        "x-api-token: [REDACTED]"
+    ]
+}
+----------------------------------------
+[2026-08-16 01:31:35] ❌ Erro CURL
+Dados: {
+    "error": "SSL certificate OpenSSL verify result: unable to get local issuer certificate (20)"
+}
+----------------------------------------
+[2026-08-16 01:31:35] ❌ Erro
+Dados: {
+    "message": "Erro ao enviar dados para Utmify: SSL certificate OpenSSL verify result: unable to get local issuer certificate (20)"
+}
+----------------------------------------
