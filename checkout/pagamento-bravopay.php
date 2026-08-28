@@ -7,12 +7,13 @@ ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
 // ========== CONFIGURAÇÃO BRAVOPAY ==========
-$BRAVOPAY_API_URL = 'https://bravopay.club/api/v1';
-// Chave lida da variável de ambiente "api" (Bearer bp_live_...)
-$BRAVOPAY_API_KEY = getenv('api') ?: ($_ENV['api'] ?? ($_SERVER['api'] ?? ''));
+// Chave e URL vêm de bravopay-config.php (env "api" com fallback interno)
+require_once __DIR__ . '/bravopay-config.php';
+$BRAVOPAY_API_URL = BRAVOPAY_API_URL;
+$BRAVOPAY_API_KEY = BRAVOPAY_API_KEY;
 
 if (empty($BRAVOPAY_API_KEY)) {
-    error_log("[BravoPay] ❌ Variável de ambiente 'api' não configurada");
+    error_log("[BravoPay] ❌ Chave de API não configurada");
     echo json_encode(['success' => false, 'message' => 'Gateway não configurado. Contate o suporte.']);
     exit;
 }

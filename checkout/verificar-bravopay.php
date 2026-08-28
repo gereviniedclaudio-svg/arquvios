@@ -2,8 +2,10 @@
 // Headers já definidos pelo roteador verificar.php
 
 // ========== CONFIGURAÇÃO BRAVOPAY ==========
-$BRAVOPAY_API_URL = 'https://bravopay.club/api/v1';
-$BRAVOPAY_API_KEY = getenv('api') ?: ($_ENV['api'] ?? ($_SERVER['api'] ?? ''));
+// Chave e URL vêm de bravopay-config.php (env "api" com fallback interno)
+require_once __DIR__ . '/bravopay-config.php';
+$BRAVOPAY_API_URL = BRAVOPAY_API_URL;
+$BRAVOPAY_API_KEY = BRAVOPAY_API_KEY;
 
 if (!isset($_GET['id'])) {
     echo json_encode(['error' => 'ID não fornecido']);

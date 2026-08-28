@@ -1,0 +1,115 @@
+[2026-08-28 17:36:36] 📥 Dados recebidos
+Dados: {
+    "raw": "{\"orderId\":\"rpb92rlwcv86ea6f25lyfokk\",\"platform\":\"BravoPay\",\"paymentMethod\":\"pix\",\"status\":\"waiting_payment\",\"createdAt\":\"2026-08-28 17:36:31\",\"customer\":{\"name\":\"Teste Integracao\",\"email\":\"teste@email.com\",\"phone\":\"11999999999\",\"document\":\"48098147266\",\"country\":\"BR\",\"ip\":\"127.0.0.1\",\"userAgent\":\"curl\\\/8.17.0\",\"externalId\":\"rpb92rlwcv86ea6f25lyfokk\",\"fbp\":null,\"fbc\":null},\"products\":[{\"id\":\"PROD_6a91c71f4498a\",\"name\":\"Teste BravoPay\",\"quantity\":1,\"priceInCents\":500}],\"trackingParameters\":{\"utm_source\":\"fb\",\"utm_campaign\":\"teste\"},\"commission\":{\"totalPriceInCents\":500,\"gatewayFeeInCents\":0,\"userCommissionInCents\":500},\"isTest\":false}"
+}
+----------------------------------------
+[2026-08-28 17:36:36] 🔄 Processando dados recebidos
+Dados: {
+    "orderId": "rpb92rlwcv86ea6f25lyfokk",
+    "platform": "BravoPay",
+    "paymentMethod": "pix",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-28 17:36:31",
+    "customer": {
+        "name": "Teste Integracao",
+        "email": "teste@email.com",
+        "phone": "11999999999",
+        "document": "48098147266",
+        "country": "BR",
+        "ip": "127.0.0.1",
+        "userAgent": "curl\/8.17.0",
+        "externalId": "rpb92rlwcv86ea6f25lyfokk",
+        "fbp": null,
+        "fbc": null
+    },
+    "products": [
+        {
+            "id": "PROD_6a91c71f4498a",
+            "name": "Teste BravoPay",
+            "quantity": 1,
+            "priceInCents": 500
+        }
+    ],
+    "trackingParameters": {
+        "utm_source": "fb",
+        "utm_campaign": "teste"
+    },
+    "commission": {
+        "totalPriceInCents": 500,
+        "gatewayFeeInCents": 0,
+        "userCommissionInCents": 500
+    },
+    "isTest": false
+}
+----------------------------------------
+[2026-08-28 17:36:36] 📤 Dados formatados para Utmify
+Dados: {
+    "orderId": "rpb92rlwcv86ea6f25lyfokk",
+    "platform": "BravoPay",
+    "paymentMethod": "pix",
+    "status": "waiting_payment",
+    "createdAt": "2026-08-28 17:36:31",
+    "approvedDate": null,
+    "refundedAt": null,
+    "customer": {
+        "name": "Teste Integracao",
+        "email": "teste@email.com",
+        "phone": "11999999999",
+        "document": "48098147266",
+        "country": "BR",
+        "ip": "127.0.0.1",
+        "userAgent": "curl\/8.17.0",
+        "externalId": "rpb92rlwcv86ea6f25lyfokk",
+        "fbp": null,
+        "fbc": null
+    },
+    "products": [
+        {
+            "id": "PROD_6a91c71f4498a",
+            "name": "Teste BravoPay",
+            "planId": null,
+            "planName": null,
+            "quantity": 1,
+            "priceInCents": 500
+        }
+    ],
+    "trackingParameters": {
+        "src": null,
+        "sck": null,
+        "utm_source": "fb",
+        "utm_campaign": "teste",
+        "utm_medium": null,
+        "utm_content": null,
+        "utm_term": null,
+        "xcod": null,
+        "fbclid": null,
+        "gclid": null,
+        "ttclid": null
+    },
+    "commission": {
+        "totalPriceInCents": 500,
+        "gatewayFeeInCents": 0,
+        "userCommissionInCents": 500
+    },
+    "isTest": false
+}
+----------------------------------------
+[2026-08-28 17:36:36] 📡 Enviando requisição para Utmify
+Dados: {
+    "url": "https:\/\/api.utmify.com.br\/api-credentials\/orders",
+    "headers": [
+        "Content-Type: application\/json",
+        "x-api-token: [REDACTED]"
+    ]
+}
+----------------------------------------
+[2026-08-28 17:36:36] ✅ Resposta da API Utmify
+Dados: {
+    "http_code": 200,
+    "response": {
+        "OK": true,
+        "data": [],
+        "result": "SUCCESS"
+    }
+}
+----------------------------------------

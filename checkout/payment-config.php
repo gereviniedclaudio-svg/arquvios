@@ -2,7 +2,7 @@
 /**
  * CONFIGURAÇÃO DE GATEWAY DE PAGAMENTO
  * 
- * Gateway ativo: Medusa Pay (definido em gateway-config.json)
+ * Gateway ativo: BravoPay (definido em gateway-config.json)
  */
 
 // ========== CARREGA CONFIGURAÇÃO DO JSON ==========
@@ -12,7 +12,7 @@ $configFile = __DIR__ . '/gateway-config.json';
 if (!file_exists($configFile)) {
     // Cria configuração padrão se não existir
     $defaultConfig = [
-        'active_gateway' => 'medusa'
+        'active_gateway' => 'bravopay'
     ];
     file_put_contents($configFile, json_encode($defaultConfig, JSON_PRETTY_PRINT));
 }

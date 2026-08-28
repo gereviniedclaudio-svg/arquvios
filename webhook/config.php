@@ -1,11 +1,11 @@
 <?php
 /**
- * Arquivo de configuração para integração MedusaPay + UTMfy
+ * Arquivo de configuração para integração BravoPay + UTMfy
  * 
  * INSTRUÇÕES:
  * 1. Crie uma credencial de API na UTMfy
- * 2. Substitua SUA_CHAVE_API_UTMFY_AQUI pela chave que você receber
- * 3. Configure o webhook na MedusaPay para apontar para este arquivo
+ * 2. Substitua a chave em 'api_key' pela sua chave da UTMfy
+ * 3. Configure o webhook na BravoPay (dashboard/integracoes/webhooks) apontando para /webhook/utmfy.php
  */
 
 return [
@@ -17,10 +17,10 @@ return [
         'enabled' => true
     ],
     
-    // Configurações da MedusaPay
-    'medusapay' => [
+    // Configurações da BravoPay
+    'bravopay' => [
         'webhook_url' => '/webhook/utmfy.php',
-        'events' => ['transaction.approved', 'transaction.paid'],
+        'events' => ['transaction.created', 'transaction.paid', 'transaction.refunded', 'transaction.chargeback'],
         'enabled' => true
     ],
     

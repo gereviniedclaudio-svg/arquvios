@@ -1,8 +1,12 @@
 <?php
 /**
- * Webhook para integrar BilionPay com UTMfy via API
- * Recebe notificações da BilionPay e envia para UTMfy usando credencial de API
- * 
+ * Webhook para integrar BravoPay com UTMfy via API
+ * Recebe notificações da BravoPay e envia para UTMfy usando credencial de API
+ *
+ * Cadastre a URL deste arquivo em:
+ *   https://bravopay.club/dashboard/integracoes/webhooks
+ * Eventos: transaction.created, transaction.paid, transaction.refunded, transaction.chargeback
+ *
  * Documentação UTMfy: https://api.utmify.com.br/api-credentials/orders
  */
 
@@ -30,8 +34,67 @@ $input = file_get_contents('php://input');
 $headers = getallheaders();
 $webhookData = json_decode($input, true);
 
-logWebhook("Webhook recebido da BilionPay - Headers: " . json_encode($headers));
-logWebhook("Webhook recebido da BilionPay - Body: " . $input);
+logWebhook("Webhook recebido da BravoPay - Headers: " . json_encode($headers));
+logWebhook("Webhook recebido da BravoPay - Body: " . $input);
+
+// ==================================================================
+// NORMALIZAÇÃO DO FORMATO BRAVOPAY
+// BravoPay envia: { "event": "transaction.paid", "transaction": { ... } }
+// Convertemos para o formato interno { type: "transaction", data: { ... } }
+// usado pelo restante deste arquivo.
+// ==================================================================
+if (is_array($webhookData) && isset($webhookData['event']) && isset($webhookData['transaction'])) {
+    $bpEvent = $webhookData['event'];
+    $bpTx    = $webhookData['transaction'];
+    $bpCust  = $bpTx['customer'] ?? [];
+
+    // Deriva o status a partir do evento quando não vier explícito
+    $bpStatus = strtoupper($bpTx['status'] ?? '');
+    if ($bpStatus === '') {
+        if ($bpEvent === 'transaction.paid')          $bpStatus = 'PAID';
+        elseif ($bpEvent === 'transaction.refunded')  $bpStatus = 'REFUNDED';
+        elseif ($bpEvent === 'transaction.chargeback') $bpStatus = 'CHARGEBACK';
+        elseif ($bpEvent === 'transaction.created')   $bpStatus = 'PENDING';
+    }
+
+    // UTMs da BravoPay vêm sem o prefixo "utm_" (source/medium/campaign/...)
+    $bpUtm = $bpTx['utm'] ?? [];
+    $bpMetadata = [
+        'utm_source'   => $bpUtm['source']   ?? null,
+        'utm_medium'   => $bpUtm['medium']   ?? null,
+        'utm_campaign' => $bpUtm['campaign'] ?? null,
+        'utm_content'  => $bpUtm['content']  ?? null,
+        'utm_term'     => $bpUtm['term']     ?? null,
+        'nome'         => $bpCust['name']    ?? null,
+        'email'        => $bpCust['email']   ?? null,
+        'cpf'          => $bpCust['cpf']     ?? null,
+    ];
+
+    $webhookData = [
+        'type'     => 'transaction',
+        'objectId' => $bpTx['id'] ?? null,
+        'data'     => [
+            'id'            => $bpTx['id'] ?? null,
+            'status'        => $bpStatus,
+            'amount'        => intval($bpTx['amount_cents'] ?? 0),
+            'paymentMethod' => strtolower($bpTx['method'] ?? 'pix'),
+            'currency'      => strtoupper($bpTx['currency'] ?? 'BRL'),
+            'createdAt'     => $bpTx['created_at'] ?? null,
+            'paidAt'        => $bpTx['paid_at'] ?? null,
+            'refundedAt'    => $bpTx['refunded_at'] ?? null,
+            'customer'      => [
+                'name'     => $bpCust['name'] ?? null,
+                'email'    => $bpCust['email'] ?? null,
+                'phone'    => $bpCust['phone'] ?? null,
+                'document' => ['number' => $bpCust['cpf'] ?? null],
+            ],
+            'metadata'      => $bpMetadata,
+            'external_reference' => $bpTx['external_reference'] ?? null,
+        ],
+    ];
+
+    logWebhook("Payload BravoPay normalizado (evento: $bpEvent, status: $bpStatus)");
+}
 
 // Verificar se os dados são válidos
 if (!$webhookData) {
@@ -91,7 +154,7 @@ if ($status === 'PAID') {
     $utmfyStatus = 'paid';
     $shouldProcess = true;
     logWebhook("✅ Transação PAGA confirmada! Enviando para UTMfy como 'paid'...");
-} elseif (in_array($status, ['WAITING_PAYMENT', 'PROCESSING', 'IN_ANALYSIS', 'AUTHORIZED'])) {
+} elseif (in_array($status, ['WAITING_PAYMENT', 'PROCESSING', 'IN_ANALYSIS', 'AUTHORIZED', 'PENDING'])) {
     $utmfyStatus = 'waiting_payment';
     $shouldProcess = true;
     logWebhook("⏳ Transação PENDENTE detectada ($status). Enviando para UTMfy como 'waiting_payment'...");
@@ -99,14 +162,14 @@ if ($status === 'PAID') {
     $utmfyStatus = 'refunded';
     $shouldProcess = true;
     logWebhook("💰 Transação REEMBOLSADA detectada. Enviando para UTMfy como 'refunded'...");
-} elseif ($status === 'REFUSED') {
+} elseif (in_array($status, ['REFUSED', 'FAILED', 'CANCELED', 'EXPIRED'])) {
     $utmfyStatus = 'refused';
     $shouldProcess = true;
-    logWebhook("❌ Transação RECUSADA detectada. Enviando para UTMfy como 'refused'...");
-} elseif ($status === 'CHARGEDBACK') {
+    logWebhook("❌ Transação RECUSADA/CANCELADA detectada ($status). Enviando para UTMfy como 'refused'...");
+} elseif (in_array($status, ['CHARGEDBACK', 'CHARGEBACK'])) {
     $utmfyStatus = 'chargedback';
     $shouldProcess = true;
-    logWebhook("⚠️ Transação CHARGEDBACK detectada. Enviando para UTMfy como 'chargedback'...");
+    logWebhook("⚠️ Transação CHARGEBACK detectada. Enviando para UTMfy como 'chargedback'...");
 } else {
     logWebhook("Transação ignorada. Status: $status - Não será enviada para UTMfy");
     echo json_encode([
@@ -319,7 +382,7 @@ if (strlen($customerCountry) > 2) {
 // Construir payload conforme documentação UTMfy - TODOS OS CAMPOS OBRIGATÓRIOS
 $utmfyPayload = [
     'orderId' => (string)$transactionId, // OBRIGATÓRIO
-    'platform' => 'BilionPay', // OBRIGATÓRIO
+    'platform' => 'BravoPay', // OBRIGATÓRIO
     'paymentMethod' => $utmfyPaymentMethod, // OBRIGATÓRIO
     'status' => $utmfyStatus, // OBRIGATÓRIO
     'createdAt' => $createdAt, // OBRIGATÓRIO - formato 'YYYY-MM-DD HH:MM:SS' UTC
@@ -425,7 +488,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
     'Accept: application/json',
     'x-api-token: ' . $UTMFY_API_TOKEN,
-    'User-Agent: BilionPay-UTMfy-Integration/1.0'
+    'User-Agent: BravoPay-UTMfy-Integration/1.0'
 ]);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_TIMEOUT, 30);

@@ -1,17 +1,17 @@
 /**
  * 🔧 Configuração Individual do Site - Concurso SES TO 2026
- * Sistema de inscrição com gateway MedusaPay
+ * Sistema de inscrição com gateway BravoPay
  */
 
 // ⚠️ CONFIGURAR PARA CADA SITE INDIVIDUALMENTE
 window.SITE_CONFIG = {
-  // 💳 PIX via /checkout/pagamento.php (chave só no PHP Medusa)
+  // 💳 PIX via /checkout/pagamento.php (chave só no PHP BravoPay)
   CHECKOUT: {
     createUrl: '/checkout/pagamento.php',
     statusUrl: '/checkout/verificar.php'
   },
   
-  // 🔗 Integração MedusaPay + UTMfy
+  // 🔗 Integração BravoPay + UTMfy
   INTEGRATION: {
     webhook_enabled: true,
     webhook_url: '/webhook/utmfy.php',
@@ -25,7 +25,7 @@ window.SITE_CONFIG = {
     category: 'taxa_inscricao',
     vendor: 'SES TO 2026',
     value: 150.00,
-    value_cents: 15000, // Valor em centavos para MedusaPay (superior; medio = 10000 via resolveTaxaSesTo)
+    value_cents: 15000, // Valor em centavos para BravoPay (superior; medio = 10000 via resolveTaxaSesTo)
     currency: 'BRL',
     product_hash: 'SESTO26_TAXA',
     offer_hash: 'SESTO26_OFFER'
@@ -185,12 +185,12 @@ window.trackConversion = function(eventType, data) {
 
 // 📢 Log de configuração ao carregar
 console.log('🔧 Site configurado:', {
-  api: 'MedusaPay',
-  gateway: 'MedusaPay',
+  api: 'BravoPay',
+  gateway: 'BravoPay',
   utmfy_pixel: window.SITE_CONFIG.INTEGRATION.utmfy_pixel_id,
   product: window.SITE_CONFIG.PRODUCT.name,
   valor: 'R$ 150,00 (superior) / R$ 100,00 (medio)',
-  nota: 'Sistema de pagamento com MedusaPay e tracking UTMfy'
+  nota: 'Sistema de pagamento com BravoPay e tracking UTMfy'
 });
 
 // Taxa conforme Edital 001/2026: medio R$100 | superior R$150
