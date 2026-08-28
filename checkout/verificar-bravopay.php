@@ -1,16 +1,16 @@
 <?php
 // Headers já definidos pelo roteador verificar.php
 
-// ========== CONFIGURAÇÃO BLACKCAT ==========
-$BLACKCAT_API_URL = 'https://api.blackcatoficial.com/api';
-$BLACKCAT_API_KEY = 'sk_live_c791220ca12eff50c57fd2f4621faac5695a3558391853509e68d4fc7db3b8f8';
+// ========== CONFIGURAÇÃO BRAVOPAY ==========
+$BRAVOPAY_API_URL = 'https://bravopay.club/api/v1';
+$BRAVOPAY_API_KEY = getenv('api') ?: ($_ENV['api'] ?? ($_SERVER['api'] ?? ''));
 
 if (!isset($_GET['id'])) {
     echo json_encode(['error' => 'ID não fornecido']);
     exit;
 }
 
-$id = preg_replace('/[^a-zA-Z0-9\-]/', '', trim($_GET['id']));
+$id = preg_replace('/[^a-zA-Z0-9\-_]/', '', trim($_GET['id']));
 if ($id === '') {
     echo json_encode(['error' => 'ID inválido']);
     exit;
@@ -25,14 +25,14 @@ try {
     $stmt->execute(['transaction_id' => $id]);
     $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // ========== CONSULTA STATUS NA BLACKCAT ==========
-    $ch = curl_init($BLACKCAT_API_URL . '/sales/' . rawurlencode($id) . '/status');
+    // ========== CONSULTA STATUS NA BRAVOPAY ==========
+    $ch = curl_init($BRAVOPAY_API_URL . '/transactions/' . rawurlencode($id));
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT        => 30,
         CURLOPT_HTTPHEADER     => [
             'Accept: application/json',
-            'X-API-Key: ' . $BLACKCAT_API_KEY
+            'Authorization: Bearer ' . $BRAVOPAY_API_KEY
         ]
     ]);
     $response = curl_exec($ch);
@@ -41,14 +41,18 @@ try {
 
     $tx = ($response !== false) ? json_decode($response, true) : null;
 
-    if ($httpCode >= 200 && $httpCode < 300 && !empty($tx['success']) && !empty($tx['data'])) {
-        $statusRaw = strtoupper((string) ($tx['data']['status'] ?? ''));
-        // Blackcat status: PENDING, PAID, CANCELLED, REFUNDED
+    // BravoPay pode retornar o objeto direto ou dentro de "data"
+    $txData = $tx['data'] ?? $tx;
+
+    if ($httpCode >= 200 && $httpCode < 300 && !empty($txData['id'])) {
+        $statusRaw = strtoupper((string) ($txData['status'] ?? ''));
+        // Status BravoPay: PENDING, PAID, EXPIRED, REFUNDED, CHARGEBACK
         $isPaid = ($statusRaw === 'PAID');
-        $status = $isPaid ? 'paid' : 'pending';
+        $status = $isPaid ? 'paid' : strtolower($statusRaw ?: 'pending');
+        if ($status === '') $status = 'pending';
     } elseif ($pedido) {
         // API indisponível: usa banco
-        error_log("[Verificar Blackcat] ⚠️ API indisponível (HTTP $httpCode). Usando status do banco.");
+        error_log("[Verificar BravoPay] ⚠️ API indisponível (HTTP $httpCode). Usando status do banco.");
         $status = $pedido['status'];
         $isPaid = ($status === 'paid');
     } else {
@@ -82,13 +86,13 @@ try {
         $update->execute(['updated_at' => date('c'), 'transaction_id' => $id]);
 
         if ($update->rowCount() > 0) {
-            error_log("[Verificar Blackcat] ✅ Pagamento aprovado: $id. Notificando Utmify...");
+            error_log("[Verificar BravoPay] ✅ Pagamento aprovado: $id. Notificando Utmify...");
 
             $utmParams = json_decode($pedido['utm_params'] ?? '[]', true);
             if (!is_array($utmParams)) $utmParams = [];
 
             $utmifyData = [
-                'orderId' => (string) $id, 'platform' => 'Blackcat', 'paymentMethod' => 'pix', 'status' => 'paid',
+                'orderId' => (string) $id, 'platform' => 'BravoPay', 'paymentMethod' => 'pix', 'status' => 'paid',
                 'createdAt' => $pedido['created_at'], 'approvedDate' => gmdate('Y-m-d H:i:s'), 'paidAt' => gmdate('Y-m-d H:i:s'),
                 'customer' => [
                     'name' => $pedido['nome'], 'email' => $pedido['email'], 'phone' => $pedido['telefone'] ?? null, 'document' => $pedido['cpf'],
@@ -116,6 +120,6 @@ try {
     }
 
 } catch (Exception $e) {
-    error_log("[Verificar Blackcat] ❌ Erro: " . $e->getMessage());
+    error_log("[Verificar BravoPay] ❌ Erro: " . $e->getMessage());
     echo json_encode(['success' => false, 'status' => 'error', 'message' => 'Erro ao verificar o status do pagamento']);
 }

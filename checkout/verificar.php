@@ -23,14 +23,11 @@ try {
     
     // Mapeia o gateway para o arquivo de verificação correto
     $VERIFICATION_FILES = [
-        'medusa' => 'verificar-medusa.php',
-        'axyra' => 'verificar-axyra.php',
-        'trust7' => 'verificar-trust7.php',
-        'blackcat' => 'verificar-blackcat.php'
+        'bravopay' => 'verificar-bravopay.php'
     ];
     
-    // Define o arquivo do verificador ativo (fallback: axyra)
-    $VERIFICATION_FILE = $VERIFICATION_FILES[$ACTIVE_GATEWAY] ?? $VERIFICATION_FILES['axyra'];
+    // Define o arquivo do verificador ativo (fallback: bravopay)
+    $VERIFICATION_FILE = $VERIFICATION_FILES[$ACTIVE_GATEWAY] ?? $VERIFICATION_FILES['bravopay'];
     
     error_log("[Verificar Router] 📄 Arquivo de verificação: " . $VERIFICATION_FILE);
     
