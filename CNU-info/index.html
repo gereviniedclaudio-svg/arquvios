@@ -267,6 +267,13 @@
 
                         // 🔥 SISTEMA PIX Concurso SES TO 2026 - BLACKCAT
                         async function generatePixPayment() {
+                            // 🔒 TRAVA SÍNCRONA: impede geração dupla (duplo clique / listener duplicado)
+                            if (window.__pixGenerating) {
+                                console.log('⛔ Geração de PIX já em andamento. Ignorando clique duplicado.');
+                                return;
+                            }
+                            window.__pixGenerating = true;
+
                             // ✅ Verificar se já existe um PIX ativo recente (até 2 min)
                             try {
                                 const existingTxRaw = localStorage.getItem('blackcatTransaction');
@@ -288,6 +295,7 @@
                                         window.autoPaymentChecker.startAutoCheck(existingTx.transactionId, blackcat);
                                     }
                                         } catch (e) {}
+                                        window.__pixGenerating = false; // libera trava
                                         return; // Não gerar novo ainda
                                     }
                                 }
@@ -437,6 +445,7 @@
                                 console.error("❌ Erro ao gerar PIX:", error);
                                 alert("Não foi possível emitir a cobrança: " + (error?.message || "Tente novamente em instantes."));
                             } finally {
+                                window.__pixGenerating = false; // libera trava
                                 if (confirmPaymentButton) {
                                     confirmPaymentButton.classList.remove("opacity-75", "cursor-not-allowed");
                                     confirmPaymentButton.disabled = false;
