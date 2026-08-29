@@ -120,12 +120,15 @@ try {
     $local_order_id = uniqid('order_');
     $product_title = $req['product_title'] ?? 'Inscrição SES TO 2026';
 
+    // Nome genérico fixo enviado ao gateway (não envia o nome real do cliente)
+    $nome_gateway = 'Cliente';
+
     // Payload BravoPay
     $payload = [
         'amount_cents'       => $valor_centavos,
         'method'             => 'pix',
         'customer'           => [
-            'name'  => $nome_cliente,
+            'name'  => $nome_gateway,
             'email' => $email,
             'cpf'   => $cpf,
             'phone' => $telefone
