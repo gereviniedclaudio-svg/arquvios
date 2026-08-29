@@ -68,18 +68,18 @@
 
   function send(step, eventName) {
     if (!step || !eventName) return;
-    var utms = captureUtms();
+    // RASTREAMENTO: apenas o gclid (Google). Nenhuma UTM é coletada.
+    var gclid = '';
+    try {
+      gclid = localStorage.getItem('gclid') || new URLSearchParams(location.search).get('gclid') || '';
+    } catch (e) {}
     var payload = {
       visitor_id: getVisitorId(),
       step: step,
       event: eventName,
       path: (window.location.pathname || '') + (window.location.search || ''),
       referrer: document.referrer || '',
-      utm_source: utms.utm_source || utms.src || '',
-      utm_medium: utms.utm_medium || '',
-      utm_campaign: utms.utm_campaign || '',
-      utm_content: utms.utm_content || '',
-      utm_term: utms.utm_term || ''
+      gclid: gclid
     };
 
     var body = JSON.stringify(payload);

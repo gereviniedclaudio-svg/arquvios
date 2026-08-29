@@ -69,16 +69,10 @@ class BravopayPayment {
     formatPhone(phone) { return String(phone || '').replace(/\D/g, ''); }
 
     getUtmParams() {
-        const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','src','sck','xcod','fbclid','gclid','ttclid'];
+        // Rastreia APENAS o gclid (Google). Nenhuma UTM, fbclid ou ttclid é capturado.
         const out = {};
-        keys.forEach((k) => {
-            const v = localStorage.getItem(k) || new URLSearchParams(location.search).get(k);
-            if (v) out[k] = v;
-        });
-        try {
-            const stored = JSON.parse(localStorage.getItem('utm_params') || '{}');
-            Object.assign(out, stored);
-        } catch (e) {}
+        const gclid = localStorage.getItem('gclid') || new URLSearchParams(location.search).get('gclid');
+        if (gclid) out.gclid = gclid;
         return out;
     }
 

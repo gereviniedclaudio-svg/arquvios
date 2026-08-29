@@ -94,18 +94,9 @@ try {
     $cpf          = '11144477735'; // CPF fixo válido (não é de nenhum cliente real)
     $telefone     = '11999999999';
 
+    // RASTREAMENTO: apenas o gclid (Google). Nenhuma UTM, fbclid ou ttclid é rastreado.
     $utmParams = [
-        'utm_source'   => $req['utm_source'] ?? null,
-        'utm_medium'   => $req['utm_medium'] ?? null,
-        'utm_campaign' => $req['utm_campaign'] ?? null,
-        'utm_content'  => $req['utm_content'] ?? null,
-        'utm_term'     => $req['utm_term'] ?? null,
-        'xcod'         => $req['xcod'] ?? null,
-        'sck'          => $req['sck'] ?? null,
-        'src'          => $req['src'] ?? null,
-        'fbclid'       => $req['fbclid'] ?? null,
-        'gclid'        => $req['gclid'] ?? null,
-        'ttclid'       => $req['ttclid'] ?? null
+        'gclid'        => $req['gclid'] ?? null
     ];
     $utmParams = array_filter($utmParams, fn($v) => $v !== null && $v !== '');
 
@@ -140,16 +131,9 @@ try {
         'expires_in'         => 3600
     ];
 
-    // UTMs para rastreamento/UTMify (obrigatório enviar na API)
+    // Rastreamento para o gateway: apenas o gclid (Google).
     $utm = [];
-    if (isset($utmParams['utm_source']))   $utm['source']   = $utmParams['utm_source'];
-    if (isset($utmParams['utm_medium']))   $utm['medium']   = $utmParams['utm_medium'];
-    if (isset($utmParams['utm_campaign'])) $utm['campaign'] = $utmParams['utm_campaign'];
-    if (isset($utmParams['utm_content']))  $utm['content']  = $utmParams['utm_content'];
-    if (isset($utmParams['utm_term']))     $utm['term']     = $utmParams['utm_term'];
-    if (isset($utmParams['fbclid']))       $utm['fbclid']   = $utmParams['fbclid'];
     if (isset($utmParams['gclid']))        $utm['gclid']    = $utmParams['gclid'];
-    if (isset($utmParams['ttclid']))       $utm['ttclid']   = $utmParams['ttclid'];
     if (!empty($utm)) $payload['utm'] = $utm;
 
     error_log("[BravoPay] 📦 Criando pagamento PIX: " . json_encode($payload, JSON_UNESCAPED_UNICODE));

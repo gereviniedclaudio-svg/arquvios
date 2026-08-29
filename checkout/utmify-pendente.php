@@ -165,18 +165,9 @@ try {
                 'priceInCents' => $productPrice
             ]
         ],
+        // RASTREAMENTO: apenas o gclid (Google). Nenhuma UTM/fbclid/ttclid é enviada.
         'trackingParameters' => [
-            'src'          => $inputData['trackingParameters']['src']          ?? null,
-            'sck'          => $inputData['trackingParameters']['sck']          ?? null,
-            'utm_source'   => $inputData['trackingParameters']['utm_source']   ?? null,
-            'utm_campaign' => $inputData['trackingParameters']['utm_campaign'] ?? null,
-            'utm_medium'   => $inputData['trackingParameters']['utm_medium']   ?? null,
-            'utm_content'  => $inputData['trackingParameters']['utm_content']  ?? null,
-            'utm_term'     => $inputData['trackingParameters']['utm_term']     ?? null,
-            'xcod'         => $inputData['trackingParameters']['xcod']         ?? null,
-            'fbclid'       => $inputData['trackingParameters']['fbclid']       ?? null,
-            'gclid'        => $inputData['trackingParameters']['gclid']        ?? null,
-            'ttclid'       => $inputData['trackingParameters']['ttclid']       ?? null
+            'gclid'        => $inputData['trackingParameters']['gclid']        ?? null
         ],
         'commission' => [
             'totalPriceInCents'     => $totalPrice,

@@ -173,14 +173,8 @@ if (stripos($paymentMethodRaw, 'CREDIT') !== false || stripos($paymentMethodRaw,
     $utmfyPaymentMethod = 'pix';
 }
 
-// Extrair parâmetros UTM dos metadados (se existirem)
-$utmSource = $metadata['utm_source'] ?? null;
-$utmCampaign = $metadata['utm_campaign'] ?? null;
-$utmMedium = $metadata['utm_medium'] ?? null;
-$utmContent = $metadata['utm_content'] ?? null;
-$utmTerm = $metadata['utm_term'] ?? null;
-$src = $metadata['src'] ?? null;
-$sck = $metadata['sck'] ?? null;
+// RASTREAMENTO: apenas o gclid (Google). Nenhuma UTM/fbclid/ttclid/src/sck é rastreada.
+$gclid = $metadata['gclid'] ?? null;
 
 // Formatar datas para UTC no formato 'YYYY-MM-DD HH:MM:SS'
 function formatDateForUtmfy($dateString) {
@@ -336,13 +330,8 @@ $utmfyPayload = [
     ],
     'products' => $products, // OBRIGATÓRIO - array
     'trackingParameters' => [ // OBRIGATÓRIO
-        'src' => $src, // OPCIONAL (pode ser null)
-        'sck' => $sck, // OPCIONAL (pode ser null)
-        'utm_source' => $utmSource, // OPCIONAL (pode ser null)
-        'utm_campaign' => $utmCampaign, // OPCIONAL (pode ser null)
-        'utm_medium' => $utmMedium, // OPCIONAL (pode ser null)
-        'utm_content' => $utmContent, // OPCIONAL (pode ser null)
-        'utm_term' => $utmTerm // OPCIONAL (pode ser null)
+        // RASTREAMENTO: apenas o gclid (Google).
+        'gclid' => $gclid // OPCIONAL (pode ser null)
     ],
     'commission' => [ // OBRIGATÓRIO
         'totalPriceInCents' => $amount, // OBRIGATÓRIO
