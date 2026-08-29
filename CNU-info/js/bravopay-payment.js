@@ -51,14 +51,9 @@ class BravopayPayment {
     }
 
     randomizeTaxaCents(baseReais) {
-        if (Number(baseReais) === 39.9) {
-            var variantsSeguranca = [3990, 3991, 3992, 3993];
-            return variantsSeguranca[Math.floor(Math.random() * variantsSeguranca.length)];
-        }
-        var variants = Number(baseReais) === 100
-            ? [10000, 10001, 9999]
-            : [15000, 15001, 14999];
-        return variants[Math.floor(Math.random() * variants.length)];
+        // Valor exato, sem variação de centavos: o cliente paga exatamente
+        // o valor mostrado na tela (ex: 100,00 -> 10000, 150,00 -> 15000).
+        return Math.round(Number(baseReais) * 100);
     }
 
     validateUserData(userData, addressData) {
