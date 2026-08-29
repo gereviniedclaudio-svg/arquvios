@@ -297,13 +297,8 @@
                                 }
                             }
                         }
-                        const cidadeFinal = JSON.parse(localStorage.getItem("cidadeProvaFinal") || "{}");
-                        if (cidadeFinal.cityId) {
-                            const card = document.querySelector('.location-card input[value="' + cidadeFinal.cityId + '"]');
-                            if (card && card.closest) {
-                                selectProvaLocation(card.closest(".location-card"), cidadeFinal.cityId);
-                            }
-                        }
+                        // Não restaurar cidade selecionada anteriormente (sempre começar em branco)
+                        localStorage.removeItem("cidadeProvaFinal");
                         updateSubmitButton();
                     } catch (error) {
                         console.error("Erro ao carregar seleção anterior:", error);
