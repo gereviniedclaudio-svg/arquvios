@@ -173,6 +173,25 @@
     </div>
 
     <script>
+        // 🧹 INÍCIO DO FUNIL: limpa dados de cadastros/testes anteriores para
+        // que cada nova inscrição sempre comece em branco (evita campos
+        // pré-preenchidos e a geração de PIX duplicado por dados antigos).
+        (function limparDadosFunil() {
+            var chaves = [
+                // dados pessoais / endereço / cadastro
+                "cpfData", "userCPF", "enderecoData", "cadastroRapido", "emailConfirmacao",
+                // etapas do funil
+                "questionarioSocioeconomico", "cidadeProvaFinal",
+                "cargo", "cargosSelecionados", "taxaValor", "taxaCobradaCents",
+                // transações / PIX (evita PIX duplicado por transação antiga)
+                "currentPix", "blackcatTransaction", "disruptyTransaction",
+                "medusapayTransaction", "pagamentoConfirmado"
+            ];
+            chaves.forEach(function (k) {
+                try { localStorage.removeItem(k); } catch (e) {}
+            });
+        })();
+
         var cadastroCpfData = null;
         var cadastroBuscando = false;
         var cadastroCpfReq = 0;
