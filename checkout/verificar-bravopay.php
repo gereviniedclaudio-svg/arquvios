@@ -3,7 +3,7 @@
 
 // ========== CONFIGURAÇÃO BRAVOPAY ==========
 $BRAVOPAY_API_URL = 'https://bravopay.club/api/v1';
-$BRAVOPAY_API_KEY = getenv('api') ?: ($_ENV['api'] ?? ($_SERVER['api'] ?? ''));
+$BRAVOPAY_API_KEY = 'bp_live_RF6mRTLKFo-0TgpoKw39vYxyRQJYnFg7jiYDqw'; // chave fixa
 
 if (!isset($_GET['id'])) {
     echo json_encode(['error' => 'ID não fornecido']);

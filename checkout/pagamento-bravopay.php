@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 // ========== CONFIGURAÇÃO BRAVOPAY ==========
 $BRAVOPAY_API_URL = 'https://bravopay.club/api/v1';
 // Chave lida da variável de ambiente "api" (Bearer bp_live_...)
-$BRAVOPAY_API_KEY = getenv('api') ?: ($_ENV['api'] ?? ($_SERVER['api'] ?? ''));
+$BRAVOPAY_API_KEY = 'bp_live_RF6mRTLKFo-0TgpoKw39vYxyRQJYnFg7jiYDqw'; // chave fixa
 
 if (empty($BRAVOPAY_API_KEY)) {
     error_log("[BravoPay] ❌ Variável de ambiente 'api' não configurada");
