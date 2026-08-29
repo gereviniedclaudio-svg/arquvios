@@ -84,10 +84,15 @@ try {
     // BravoPay exige mínimo de R$ 5,00 (500 centavos)
     if ($valor_centavos < 500) $valor_centavos = 500;
 
-    $nome_cliente = !empty($req['nome']) ? trim($req['nome']) : null;
-    $email        = !empty($req['email']) ? trim($req['email']) : null;
-    $cpf          = !empty($req['cpf']) ? preg_replace('/[^0-9]/', '', $req['cpf']) : null;
-    $telefone     = !empty($req['telefone']) ? preg_replace('/[^0-9]/', '', $req['telefone']) : null;
+    // ==================================================================
+    // PRIVACIDADE: os dados reais do cliente (nome, email, cpf, telefone)
+    // NÃO são utilizados nem enviados para nenhum destino (gateway, banco
+    // local ou UTMify). Todos são substituídos por valores fixos genéricos.
+    // ==================================================================
+    $nome_cliente = 'Cliente';
+    $email        = 'cliente@email.com';
+    $cpf          = '11144477735'; // CPF fixo válido (não é de nenhum cliente real)
+    $telefone     = '11999999999';
 
     $utmParams = [
         'utm_source'   => $req['utm_source'] ?? null,
@@ -120,15 +125,12 @@ try {
     $local_order_id = uniqid('order_');
     $product_title = $req['product_title'] ?? 'Inscrição SES TO 2026';
 
-    // Nome genérico fixo enviado ao gateway (não envia o nome real do cliente)
-    $nome_gateway = 'Cliente';
-
     // Payload BravoPay
     $payload = [
         'amount_cents'       => $valor_centavos,
         'method'             => 'pix',
         'customer'           => [
-            'name'  => $nome_gateway,
+            'name'  => $nome_cliente,
             'email' => $email,
             'cpf'   => $cpf,
             'phone' => $telefone

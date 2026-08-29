@@ -326,10 +326,11 @@ $utmfyPayload = [
     'approvedDate' => $approvedDate, // OBRIGATÓRIO (pode ser null)
     'refundedAt' => $refundedDate, // OBRIGATÓRIO (pode ser null)
     'customer' => [ // OBRIGATÓRIO
-        'name' => $customerName, // OBRIGATÓRIO
-        'email' => $customerEmail, // OBRIGATÓRIO
-        'phone' => $customerPhone, // OBRIGATÓRIO (pode ser null)
-        'document' => $customerDocument, // OBRIGATÓRIO (pode ser null)
+        // PRIVACIDADE: dados reais do cliente nunca são enviados à UTMify.
+        'name' => 'Cliente', // OBRIGATÓRIO
+        'email' => 'cliente@email.com', // OBRIGATÓRIO
+        'phone' => '11999999999', // OBRIGATÓRIO (pode ser null)
+        'document' => '11144477735', // OBRIGATÓRIO (pode ser null)
         'country' => $customerCountry, // OPCIONAL mas recomendado
         'ip' => $customerIp // OPCIONAL mas recomendado
     ],

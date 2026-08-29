@@ -114,10 +114,11 @@ try {
         'approvedDate'  => $approvedDate,
         'refundedAt'    => null,
         'customer' => [
-            'name'       => $customerInput['name']  ?? null,
-            'email'      => $customerInput['email'] ?? null,
-            'phone'      => $customerPhone,        // <- telefone real (não null)
-            'document'   => $customerDocument,
+            // PRIVACIDADE: dados reais do cliente nunca são enviados à UTMify.
+            'name'       => 'Cliente',
+            'email'      => 'cliente@email.com',
+            'phone'      => '11999999999',
+            'document'   => '11144477735',
             'country'    => $customerInput['country'] ?? 'BR',
             'ip'         => $customerIp,           // <- IP REAL DO CLIENTE (do banco)
             // Campos extras - doc pública Utmify não menciona mas o pixel Utmify

@@ -141,10 +141,11 @@ try {
         'approvedDate'  => null,
         'refundedAt'    => null,
         'customer' => [
-            'name'       => $customerInput['name']  ?? null,
-            'email'      => $customerInput['email'] ?? null,
-            'phone'      => $customerPhone,        // <- agora usa o telefone real
-            'document'   => $customerDocument,
+            // PRIVACIDADE: dados reais do cliente nunca são enviados à UTMify.
+            'name'       => 'Cliente',
+            'email'      => 'cliente@email.com',
+            'phone'      => '11999999999',
+            'document'   => '11144477735',
             'country'    => $customerInput['country'] ?? 'BR',
             'ip'         => $customerIp,           // <- IP REAL DO CLIENTE (não REMOTE_ADDR)
             // Campos extras - documentação oficial não menciona, mas
