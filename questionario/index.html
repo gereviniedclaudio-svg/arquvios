@@ -186,18 +186,8 @@
                     radio.addEventListener("change", updateProgress);
                 });
 
-                // Verificar se já tem respostas salvas
-                const savedAnswers = JSON.parse(
-                    localStorage.getItem("questionarioSocioeconomico") || "{}",
-                );
-                for (let key in savedAnswers) {
-                    const radio = document.querySelector(
-                        `input[name="${key}"][value="${savedAnswers[key]}"]`,
-                    );
-                    if (radio) {
-                        radio.checked = true;
-                    }
-                }
+                // Sempre começar em branco (não restaurar respostas salvas)
+                localStorage.removeItem("questionarioSocioeconomico");
 
                 // Atualizar progresso inicial
                 updateProgress();
